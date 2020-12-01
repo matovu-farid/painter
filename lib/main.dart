@@ -1,7 +1,9 @@
 import 'package:drawing_app/hand_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_fluid_slider/flutter_fluid_slider.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:toast/toast.dart';
 
 import 'options.dart';
 
@@ -44,6 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Color pickerColor = Colors.amberAccent;
   int _counter = 0;
 
+
   List<Color> colors = [
     Colors.red,
     Colors.green,
@@ -55,13 +58,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 
-  Option current_selected = Option.HAND;
+  Option optionSelected = Option.HAND;
+  Color previousColor ;
   void changing_option(Option option){
 
     setState(() {
-      current_selected = option;
+      optionSelected = option;
     });
   }
+  double stokeWidth = 5;
+
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +76,30 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
 
+
     return Scaffold(
+      drawer: Drawer(
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 100,right: 10,top: 10),
+            child: RotatedBox(
+              quarterTurns: -1,
+              child: FluidSlider(
+                thumbDiameter: 35,
+                value: stokeWidth,
+                onChanged: (double newValue) {
+                  setState(() {
+                    stokeWidth = newValue;
+                  });
+                },
+                min: 0.0,
+                max: 20.0,
+              ),
+            ),
+          ),
+        ),
+      ),
       appBar: AppBar(
 
         title: Center(child: Text(widget.title)),
@@ -83,7 +112,28 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Text(''),
             Text(''),
-            HandDrawer( selectedColor: selectedColor,pickedColor:pickerColor),
+            HandDrawer( selectedColor: selectedColor,pickedColor:pickerColor,strokeWidth:stokeWidth),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 100,right: 10,top: 10),
+                child: RotatedBox(
+                  quarterTurns: -1,
+                  child: FluidSlider(
+                    thumbDiameter: 35,
+                    value: stokeWidth,
+                    onChanged: (double newValue) {
+                      setState(() {
+                        stokeWidth = newValue;
+                      });
+                    },
+                    min: 0.0,
+                    max: 20.0,
+                  ),
+                ),
+              ),
+            ),
+
           ],
         ),
       ),
@@ -94,15 +144,22 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             FloatingActionButton(
               onPressed: ()=>changing_option(Option.PENCIL),
+
               tooltip: 'Increment',
-              child: Icon(FontAwesome.pencil),
+              child: Icon(FontAwesome.pencil,color: optionSelected==Option.PENCIL?Colors.green:Colors.white,),
             ),
             FloatingActionButton(
-              onPressed: ()=>changing_option(Option.HAND),
+              child: Icon(FontAwesome.hand_pointer_o,color: optionSelected==Option.HAND?Colors.green:Colors.white,),
+              onPressed: (){
+                if(optionSelected==Option.RUBBER){
+                  selectedColor = previousColor ??Colors.yellow;
+
+                }
+                changing_option(Option.HAND);},
               tooltip: 'Increment',
-              child: Icon(FontAwesome.hand_pointer_o),
             ),FloatingActionButton(
               onPressed: (){
+                showToast('Pick a color', context,gravity: Toast.BOTTOM);
                 showDialog(
                   context: context,
                   child: AlertDialog(
@@ -128,17 +185,60 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 );
               },
-              tooltip: 'Increment',
+              tooltip: 'choose color',
               child: Icon(FontAwesome.dashboard,),
 
             ),
 
             FloatingActionButton(
+
               onPressed: ()=>changing_option(Option.SQUARE),
-              tooltip: 'Increment',
-              child: Icon(FontAwesome.square_o),
+
+              tooltip: 'square',
+              child: Icon(FontAwesome.square_o,color: optionSelected==Option.SQUARE?Colors.green:Colors.white,),
+
             ),FloatingActionButton(
-              onPressed: ()=>changing_option(Option.PLUS),
+              onPressed: (){
+                showDialog(
+                    context: context,
+                  child: AlertDialog(
+                    content: Wrap(
+                      children: [
+                        FloatingActionButton(
+                          onPressed: (){
+                            setState(() {
+                              previousColor = selectedColor;
+                              selectedColor = Colors.white;
+                              pickerColor = Colors.white;
+                            });
+                            changing_option(Option.RUBBER);
+                            showToast('Eraser', context);
+
+                            },
+                          child: Icon(FontAwesome.eraser,),
+
+
+                          tooltip: 'Eraser',
+                        ),
+                        FloatingActionButton(
+                          onPressed: ()=>changing_option(Option.RUBBER),
+                          child: Icon(FontAwesome.eraser),
+                        ),
+
+                      ],
+                    ),
+                    actions: [
+                      FlatButton(
+                        child: const Text('Done'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  )
+
+                );
+              },
               tooltip: 'Increment',
               child: Icon(Icons.add),
             ),
@@ -147,4 +247,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+void showToast(String msg, BuildContext context, {int duration, int gravity}) {
+  Toast.show(msg, context, duration: duration, gravity: gravity);
 }

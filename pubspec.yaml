@@ -21,6 +21,9 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  flutter_fluid_slider: ^1.0.2
+
+  toast: ^0.1.5
   flutter_colorpicker: ^0.3.4
   flutter_icons: ^1.1.0
   flutter:

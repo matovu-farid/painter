@@ -9,8 +9,9 @@ import 'drawing_points.dart';
 class HandDrawer extends StatefulWidget{
    Color selectedColor;
    Color pickedColor;
+   final double strokeWidth;
 
-   HandDrawer({Key key, this.selectedColor, this.pickedColor}) : super(key: key);
+   HandDrawer({Key key, this.selectedColor, this.pickedColor, this.strokeWidth}) : super(key: key);
 
 
   @override
@@ -20,7 +21,6 @@ class HandDrawer extends StatefulWidget{
 class _HandDrawerState extends State<HandDrawer> {
   List<DrawingPoints> points = [];
 
-  double strokeWidth = 3.0;
 
 
   double opacity = 1.0;
@@ -51,7 +51,7 @@ class _HandDrawerState extends State<HandDrawer> {
                   ..strokeCap = strokeCap
                   ..isAntiAlias = true
                   ..color = widget.selectedColor.withOpacity(opacity)
-                  ..strokeWidth = 5));
+                  ..strokeWidth = widget.strokeWidth));
           });
         },
         onPanStart: (details) {
@@ -63,7 +63,7 @@ class _HandDrawerState extends State<HandDrawer> {
                   ..strokeCap = strokeCap
                   ..isAntiAlias = true
                   ..color = widget.selectedColor.withOpacity(opacity)
-                  ..strokeWidth = 5));
+                  ..strokeWidth = widget.strokeWidth));
           });
         },
         onPanEnd: (details) {
