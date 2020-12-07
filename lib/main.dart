@@ -107,12 +107,9 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
 
         child: Stack(
-
-
           children: <Widget>[
-            Text(''),
-            Text(''),
-            HandDrawer( selectedColor: selectedColor,pickedColor:pickerColor,strokeWidth:stokeWidth),
+
+            MyDrawer( selectedColor: selectedColor,pickedColor:pickerColor,strokeWidth:stokeWidth,drawingOption: optionSelected,),
             Align(
               alignment: Alignment.centerRight,
               child: Padding(
@@ -141,6 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
+
           children: [
             FloatingActionButton(
               onPressed: ()=>changing_option(Option.PENCIL),
@@ -206,11 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: [
                         FloatingActionButton(
                           onPressed: (){
-                            setState(() {
-                              previousColor = selectedColor;
-                              selectedColor = Colors.white;
-                              pickerColor = Colors.white;
-                            });
+
                             changing_option(Option.RUBBER);
                             showToast('Eraser', context);
 
@@ -221,8 +215,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           tooltip: 'Eraser',
                         ),
                         FloatingActionButton(
-                          onPressed: ()=>changing_option(Option.RUBBER),
-                          child: Icon(FontAwesome.eraser),
+                          onPressed: () {
+                            changing_option(Option.CIRCLE);
+                            showToast('Circle', context);
+
+                          },
+                          child: Icon(FontAwesome.circle_o),
                         ),
 
                       ],
