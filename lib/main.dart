@@ -78,28 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
     return Scaffold(
-      drawer: Drawer(
-        child: Align(
-          alignment: Alignment.centerRight,
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 100,right: 10,top: 10),
-            child: RotatedBox(
-              quarterTurns: -1,
-              child: FluidSlider(
-                thumbDiameter: 35,
-                value: stokeWidth,
-                onChanged: (double newValue) {
-                  setState(() {
-                    stokeWidth = newValue;
-                  });
-                },
-                min: 0.0,
-                max: 20.0,
-              ),
-            ),
-          ),
-        ),
-      ),
+
       appBar: AppBar(
 
         title: Center(child: Text(widget.title)),
@@ -201,6 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     context: context,
                   child: AlertDialog(
                     content: Wrap(
+                      spacing: 2,
                       children: [
                         FloatingActionButton(
                           onPressed: (){
@@ -222,8 +202,21 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                           child: Icon(FontAwesome.circle_o),
                         ),
-
-                      ],
+                        FloatingActionButton(
+                            onPressed: () {
+                              changing_option(Option.OVAL);
+                              showToast('Oval', context);
+                            },
+                            child: Icon(FontAwesome.circle),
+                          ),
+                        FloatingActionButton(
+                          onPressed: () {
+                            changing_option(Option.RECTANGLE);
+                            showToast('Oval', context);
+                          },
+                          child: Icon(FontAwesome.times_rectangle),
+                        ),
+                        ],
                     ),
                     actions: [
                       FlatButton(

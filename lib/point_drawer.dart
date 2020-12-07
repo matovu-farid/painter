@@ -26,6 +26,12 @@ class DrawingPainter extends CustomPainter {
   }else if (option == Option.SQUARE){
     Rect rect = Rect.fromCircle(center: center,radius: radius);
     canvas.drawRect(rect, paint);
+  }else if (option == Option.OVAL){
+    Rect rect = Rect.fromCenter(center: center,width: x,height: y);
+    canvas.drawOval(rect, paint);
+  }else if (option == Option.RECTANGLE){
+    Rect rect = Rect.fromCenter(center: center,width: x,height: y);
+    canvas.drawRect(rect, paint);
   }
 
   }
@@ -43,23 +49,28 @@ class DrawingPainter extends CustomPainter {
 
          if(currentPoint.drawingOption == Option.CIRCLE){
            drawFigure(canvas, currentPoint.paint, startPoint.points, currentPoint.points);
-         }
-         if(currentPoint.drawingOption == Option.SQUARE){
+         }else if(currentPoint.drawingOption == Option.SQUARE){
            drawFigure(canvas, currentPoint.paint, startPoint.points, currentPoint.points,option: Option.SQUARE);
+         }else if(currentPoint.drawingOption == Option.OVAL){
+           drawFigure(canvas, currentPoint.paint, startPoint.points, currentPoint.points,option: Option.OVAL);
+         }else if(currentPoint.drawingOption == Option.RECTANGLE){
+           drawFigure(canvas, currentPoint.paint, startPoint.points, currentPoint.points,option: Option.RECTANGLE);
+         }else if(currentPoint.type != PointType.End && nextPoint.type != PointType.End  &&currentPoint.drawingOption == Option.RUBBER){
+           canvas.drawLine(currentPoint.points, nextPoint.points, currentPoint.paint..color = Colors.grey[50]);
          }
 
-        if (currentPoint.type != PointType.End && nextPoint.type != PointType.End  && currentPoint.drawingOption == Option.HAND) {
+        else if (currentPoint.type != PointType.End && nextPoint.type != PointType.End  && currentPoint.drawingOption == Option.HAND) {
           canvas.drawLine(currentPoint.points, nextPoint.points, currentPoint.paint);
         }
 
-        else if (currentPoint.type != PointType.End  && nextPoint.type == PointType.End  && currentPoint.drawingOption == Option.HAND) {
-          offsetPoints.clear();
-          offsetPoints.add(currentPoint.points);
-          offsetPoints.add(Offset(
-              currentPoint.points.dx + 0.1, currentPoint.points.dy + 0.1));
-          canvas.drawPoints(
-              PointMode.points, offsetPoints, currentPoint.paint);
-        }
+        // else if (currentPoint.type != PointType.End  && nextPoint.type == PointType.End  && currentPoint.drawingOption == Option.HAND) {
+        //   offsetPoints.clear();
+        //   offsetPoints.add(currentPoint.points);
+        //   offsetPoints.add(Offset(
+        //       currentPoint.points.dx + 0.1, currentPoint.points.dy + 0.1));
+        //   canvas.drawPoints(
+        //       PointMode.points, offsetPoints, currentPoint.paint);
+        // }
 
       }
 
