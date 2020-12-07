@@ -21,9 +21,18 @@ class MyDrawer extends StatefulWidget{
 
 class _MyDrawerState extends State<MyDrawer> {
   List<DrawingPoints> points = [];
+  List<DrawingPoints> pathPoints = [];
 
   double opacity = 1.0;
   StrokeCap strokeCap = (Platform.isAndroid) ? StrokeCap.butt : StrokeCap.round;
+  int nth = 1;
+
+  controlNth(int nth){
+    print(nth);
+    if(nth <3)this.nth++;
+     else this.nth = 1;
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +40,28 @@ class _MyDrawerState extends State<MyDrawer> {
     return GestureDetector(
 
       child: CustomPaint(
-          painter: DrawingPainter(pointsList: points,),
+          painter: DrawingPainter(pointsList: points,pathPoints: pathPoints),
           size: Size.infinite),
+
+      onPanDown: (details){
+
+        setState(() {
+          if(widget.drawingOption == Option.PATH){
+            RenderBox renderBox = context.findRenderObject();
+            pathPoints.add(DrawingPoints(
+                nth: nth,
+                drawingOption: widget.drawingOption,
+                points: renderBox.globalToLocal(details.globalPosition),
+                paint: Paint()
+                  ..strokeCap = strokeCap
+                  ..isAntiAlias = true
+                  ..color = widget.selectedColor.withOpacity(opacity)
+                  ..strokeWidth = widget.strokeWidth));
+            controlNth(nth);
+          }
+        });
+
+      },
 
       onPanUpdate: (details) {
         setState(() {

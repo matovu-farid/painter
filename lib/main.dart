@@ -212,9 +212,16 @@ class _MyHomePageState extends State<MyHomePage> {
                         FloatingActionButton(
                           onPressed: () {
                             changing_option(Option.RECTANGLE);
-                            showToast('Oval', context);
+                            showToast('Rectangle', context);
                           },
                           child: Icon(FontAwesome.times_rectangle),
+                        ),
+                        FloatingActionButton(
+                          onPressed: () {
+                            changing_option(Option.PATH);
+                            showToast('Path', context);
+                          },
+                          child: Icon(FontAwesome.circle_o_notch),
                         ),
                         ],
                     ),

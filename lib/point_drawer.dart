@@ -11,10 +11,11 @@ import 'dart:math';
 class DrawingPainter extends CustomPainter {
 
 
-  DrawingPainter( {this.pointsList});
+  DrawingPainter( {this.pointsList,this.pathPoints});
   List<DrawingPoints> pointsList;
+  List<DrawingPoints> pathPoints;
   List<Offset> offsetPoints = List();
-  drawFigure(Canvas canvas,Paint paint,Offset point1,Offset point2,{Option option = Option.CIRCLE}){
+  drawFigure(Canvas canvas,Paint paint,Offset point1,Offset point2,{Option option = Option.CIRCLE,Offset controlPoint}){
     double x = point2.dx - point1.dx;
     double y = point2.dy - point1.dy;
     Offset center = Offset(point1.dx + x * 0.5, point1.dy + y * 0.5);
@@ -32,20 +33,40 @@ class DrawingPainter extends CustomPainter {
   }else if (option == Option.RECTANGLE){
     Rect rect = Rect.fromCenter(center: center,width: x,height: y);
     canvas.drawRect(rect, paint);
+  }else if(option == Option.PATH){
+    Path path = Path();
+    path.moveTo(point1.dx, point1.dy);
+    path.quadraticBezierTo(controlPoint.dx??center.dx + radius, controlPoint.dy ??center.dy + radius, point2.dx, point2.dy);
+
+    canvas.drawPath(path, paint);
+    path.reset();
   }
+
 
   }
 
   DrawingPoints startPoint ;
   DrawingPoints endPoint ;
+
+  DrawingPoints startCurvePoint ;
+  DrawingPoints endCurvePoint ;
+  DrawingPoints controlCurvePoint ;
+
+
   @override
   void paint(Canvas canvas, Size size) {
 
       for (int i = 0; i < pointsList.length - 1; i++) {
          DrawingPoints currentPoint= pointsList[i];
          DrawingPoints nextPoint= pointsList[i + 1];
+
+
          endPoint = currentPoint;
-         if(currentPoint.type == PointType.Start)startPoint=currentPoint;
+
+         if(currentPoint.type == PointType.Start) {
+           startPoint = currentPoint;
+
+         }
 
          if(currentPoint.drawingOption == Option.CIRCLE){
            drawFigure(canvas, currentPoint.paint, startPoint.points, currentPoint.points);
@@ -61,7 +82,24 @@ class DrawingPainter extends CustomPainter {
 
         else if (currentPoint.type != PointType.End && nextPoint.type != PointType.End  && currentPoint.drawingOption == Option.HAND) {
           canvas.drawLine(currentPoint.points, nextPoint.points, currentPoint.paint);
-        }
+        }else if(currentPoint.drawingOption == Option.PATH){
+
+             for(int i = 0; i < pathPoints.length -1 ;i++){
+               try{
+               if(pathPoints[i].nth==1){
+               drawFigure(canvas, currentPoint.paint..style= PaintingStyle.stroke,
+                 pathPoints[i].points,
+                 pathPoints[i + 1].points,
+                 option: Option.PATH,
+                 controlPoint: pathPoints[i+2].points
+               );}
+               }catch(e){
+
+
+               }
+             }
+
+         }
 
         // else if (currentPoint.type != PointType.End  && nextPoint.type == PointType.End  && currentPoint.drawingOption == Option.HAND) {
         //   offsetPoints.clear();
