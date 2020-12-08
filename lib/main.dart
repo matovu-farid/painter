@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:drawing_app/hand_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_fluid_slider/flutter_fluid_slider.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:toast/toast.dart';
 
 import 'options.dart';
@@ -15,6 +20,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
 
@@ -45,8 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Color selectedColor = Colors.amberAccent;
   Color pickerColor = Colors.amberAccent;
   int _counter = 0;
-
-
+  File _imageFile;
   List<Color> colors = [
     Colors.red,
     Colors.green,
@@ -67,13 +72,23 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
   double stokeWidth = 5;
-
+  ScreenshotController screenshotController;
+  @override
+  void initState() {
+    super.initState();
+    screenshotController = ScreenshotController();
+  }
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     void changeColor(Color color) {
       setState(() => pickerColor = color);
     }
+
 
 
 
@@ -88,7 +103,11 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Stack(
           children: <Widget>[
 
-            MyDrawer( selectedColor: selectedColor,pickedColor:pickerColor,strokeWidth:stokeWidth,drawingOption: optionSelected,),
+            MyDrawer( selectedColor: selectedColor,
+              pickedColor:pickerColor,strokeWidth:stokeWidth,
+              drawingOption: optionSelected,
+              screenshotController: screenshotController,
+            ),
             Align(
               alignment: Alignment.centerRight,
               child: Padding(
@@ -169,12 +188,33 @@ class _MyHomePageState extends State<MyHomePage> {
 
             FloatingActionButton(
 
-              onPressed: ()=>changing_option(Option.SQUARE),
+              onPressed: (){
+                changing_option(Option.SAVE);
+                _imageFile = null;
+                screenshotController
+                    .capture()
+                    .then((File image) async {
+                  //print("Capture Done");
+                  setState(() {
+                    _imageFile = image;
+                  });
 
-              tooltip: 'square',
-              child: Icon(FontAwesome.square_o,color: optionSelected==Option.SQUARE?Colors.green:Colors.white,),
+                  if(await Permission.storage.request().isGranted){
+                    final result = await ImageGallerySaver.saveImage(image
+                        .readAsBytesSync()); // Save image to gallery,  Needs plugin  https://pub.dev/packages/image_gallery_saver
 
-            ),FloatingActionButton(
+                    Toast.show('Image Saved to gallery', context,duration: 1);
+                  }
+                }).catchError((onError) {
+                  print(onError);
+                });
+                },
+
+              tooltip: 'save',
+              child: Icon(FontAwesome.save,color: optionSelected==Option.SAVE?Colors.green:Colors.white,),
+
+            ),
+            FloatingActionButton(
               onPressed: (){
                 showDialog(
                     context: context,
@@ -193,6 +233,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
                           tooltip: 'Eraser',
+                        ),
+                        FloatingActionButton(
+
+                          onPressed: ()=>changing_option(Option.SQUARE),
+
+                          tooltip: 'square',
+                          child: Icon(FontAwesome.square_o,color: optionSelected==Option.SQUARE?Colors.green:Colors.white,),
+
                         ),
                         FloatingActionButton(
                           onPressed: () {

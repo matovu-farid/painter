@@ -21,8 +21,10 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  permission_handler: ^5.0.1+1
   flutter_fluid_slider: ^1.0.2
-
+  image_gallery_saver: '^1.6.7'
+  screenshot: ^0.2.0
   toast: ^0.1.5
   flutter_colorpicker: ^0.3.4
   flutter_icons: ^1.1.0

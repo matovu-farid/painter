@@ -4,6 +4,7 @@ import 'package:drawing_app/options.dart';
 import 'package:drawing_app/point_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:screenshot/screenshot.dart';
 
 import 'drawing_points.dart';
 
@@ -12,7 +13,8 @@ class MyDrawer extends StatefulWidget{
    Color pickedColor;
    final double strokeWidth;
    final Option drawingOption;
-   MyDrawer({Key key, this.selectedColor, this.pickedColor, this.strokeWidth, @required this.drawingOption,}) : super(key: key);
+   final ScreenshotController screenshotController;
+   MyDrawer({Key key, this.selectedColor, this.pickedColor, this.strokeWidth, @required this.drawingOption,this.screenshotController}) : super(key: key);
 
 
   @override
@@ -22,6 +24,9 @@ class MyDrawer extends StatefulWidget{
 class _MyDrawerState extends State<MyDrawer> {
   List<DrawingPoints> points = [];
   List<DrawingPoints> pathPoints = [];
+  File _imageFile;
+
+
 
   double opacity = 1.0;
   StrokeCap strokeCap = (Platform.isAndroid) ? StrokeCap.butt : StrokeCap.round;
@@ -39,9 +44,12 @@ class _MyDrawerState extends State<MyDrawer> {
 
     return GestureDetector(
 
-      child: CustomPaint(
-          painter: DrawingPainter(pointsList: points,pathPoints: pathPoints),
-          size: Size.infinite),
+      child: Screenshot(
+        controller: widget.screenshotController,
+        child: CustomPaint(
+            painter: DrawingPainter(pointsList: points,pathPoints: pathPoints),
+            size: Size.infinite),
+      ),
 
       onPanDown: (details){
 
