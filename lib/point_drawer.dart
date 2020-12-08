@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:drawing_app/options.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +13,7 @@ class DrawingPainter extends CustomPainter {
   DrawingPainter( {this.pointsList,this.pathPoints});
   List<DrawingPoints> pointsList;
   List<DrawingPoints> pathPoints;
+
   List<Offset> offsetPoints = List();
   drawFigure(Canvas canvas,Paint paint,Offset point1,Offset point2,{Option option = Option.CIRCLE,Offset controlPoint}){
     double x = point2.dx - point1.dx;
@@ -55,7 +55,7 @@ class DrawingPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-
+    //Canvas canvas  = Canvas(recorder);
       for (int i = 0; i < pointsList.length - 1; i++) {
          DrawingPoints currentPoint= pointsList[i];
          DrawingPoints nextPoint= pointsList[i + 1];

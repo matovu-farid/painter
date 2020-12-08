@@ -14,7 +14,7 @@ class MyDrawer extends StatefulWidget{
    final double strokeWidth;
    final Option drawingOption;
    final ScreenshotController screenshotController;
-   MyDrawer({Key key, this.selectedColor, this.pickedColor, this.strokeWidth, @required this.drawingOption,this.screenshotController}) : super(key: key);
+   MyDrawer({Key key, this.selectedColor, this.pickedColor, this.strokeWidth, @required this.drawingOption,this.screenshotController,}) : super(key: key);
 
 
   @override
@@ -46,9 +46,14 @@ class _MyDrawerState extends State<MyDrawer> {
 
       child: Screenshot(
         controller: widget.screenshotController,
-        child: CustomPaint(
-            painter: DrawingPainter(pointsList: points,pathPoints: pathPoints),
-            size: Size.infinite),
+        child: Scaffold(
+
+          body: CustomPaint(
+
+
+              painter: DrawingPainter(pointsList: points,pathPoints: pathPoints,),
+              size: Size.infinite),
+        ),
       ),
 
       onPanDown: (details){

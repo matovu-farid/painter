@@ -200,8 +200,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   });
 
                   if(await Permission.storage.request().isGranted){
-                    final result = await ImageGallerySaver.saveImage(image
-                        .readAsBytesSync()); // Save image to gallery,  Needs plugin  https://pub.dev/packages/image_gallery_saver
+                     final result = await ImageGallerySaver.saveImage(image
+                        .readAsBytesSync());
+                    // if(recorder.isRecording){
+                    //    var size= MediaQuery.of(context).size;
+                    //     var image=  await recorder.endRecording().toImage(size.width as int, size.height as int);
+                    //
+                    // }
+                    // Save image to gallery,  Needs plugin  https://pub.dev/packages/image_gallery_saver
 
                     Toast.show('Image Saved to gallery', context,duration: 1);
                   }
@@ -239,7 +245,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           onPressed: ()=>changing_option(Option.SQUARE),
 
                           tooltip: 'square',
-                          child: Icon(FontAwesome.square_o,color: optionSelected==Option.SQUARE?Colors.green:Colors.white,),
+                          child: Icon(FontAwesome.square_o,),
 
                         ),
                         FloatingActionButton(
