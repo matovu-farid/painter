@@ -14,10 +14,11 @@ class DrawingPainter extends CustomPainter {
   final MyModel model;
 
 
-  DrawingPainter( {this.model, this.pointsList,this.pathPoints,this.linePoints});
+  DrawingPainter( {this.model, this.pointsList,this.pathPoints,this.linePoints,this.trianglePoints});
   List<DrawingPoints> pointsList;
   List<DrawingPoints> pathPoints;
   List<DrawingPoints> linePoints;
+  List<DrawingPoints> trianglePoints;
 
   List<Offset> offsetPoints = List();
   drawFigure(Canvas canvas,Paint paint,Offset point1,Offset point2,{Option option = Option.CIRCLE,Offset controlPoint}){
@@ -45,7 +46,11 @@ class DrawingPainter extends CustomPainter {
 
     canvas.drawPath(path, paint);
     path.reset();
-  }else if(option == Option.PENCIL){
+  }else if(option == Option.TRIANGLE){
+    var vertices = Vertices(VertexMode.triangles, [point1,point2,controlPoint]);
+    canvas.drawVertices(vertices, BlendMode.clear, paint);
+  }
+  else if(option == Option.PENCIL){
     canvas.drawLine(point1, point2, paint);
   }
 
@@ -68,17 +73,29 @@ class DrawingPainter extends CustomPainter {
 
 
          endPoint = currentPoint;
-         if(model.guides) {
-           if (currentPoint.type == PointType.Start) {
-             startPoint = currentPoint;
-           }
 
+         if(currentPoint.type == PointType.Start) {
+           startPoint = currentPoint;
+
+         }
+         if(model.guides) {
            if (pathPoints != []) {
              // pathPoints.map((e) => canvas.drawPoints(PointMode.points, [e.points], e.paint..style = PaintingStyle.stroke));
              for (int i = 0; i < pathPoints.length - 1; i++) {
                canvas.drawPoints(
                    PointMode.points, pathPoints.map((e) => e.points).toList(),
                    pathPoints[i].paint
+                     ..style = PaintingStyle.stroke
+                 //..strokeWidth=4
+               );
+             }
+           }
+           if (trianglePoints != []) {
+             // pathPoints.map((e) => canvas.drawPoints(PointMode.points, [e.points], e.paint..style = PaintingStyle.stroke));
+             for (int i = 0; i < trianglePoints.length - 1; i++) {
+               canvas.drawPoints(
+                   PointMode.points, trianglePoints.map((e) => e.points).toList(),
+                   trianglePoints[i].paint
                      ..style = PaintingStyle.stroke
                  //..strokeWidth=4
                );
@@ -94,6 +111,7 @@ class DrawingPainter extends CustomPainter {
              }
            }
          }
+
       if(currentPoint.drawingOption == Option.CIRCLE){
            drawFigure(canvas, currentPoint.paint, startPoint.points, currentPoint.points);
          }else if(currentPoint.drawingOption == Option.SQUARE){
@@ -131,7 +149,24 @@ class DrawingPainter extends CustomPainter {
                }
              }
 
-         }
+         }else if(currentPoint.drawingOption == Option.TRIANGLE){
+
+        for(int i = 0; i < trianglePoints.length -1 ;i++){
+          try{
+            if(trianglePoints[i].nth==1){
+              drawFigure(canvas, currentPoint.paint..style= PaintingStyle.stroke,
+                  trianglePoints[i].points,
+                  trianglePoints[i + 2].points,
+                  option: Option.TRIANGLE,
+                  controlPoint: trianglePoints[i+1].points
+              );}
+          }catch(e){
+
+
+          }
+        }
+
+      }
 
         // else if (currentPoint.type != PointType.End  && nextPoint.type == PointType.End  && currentPoint.drawingOption == Option.HAND) {
         //   offsetPoints.clear();

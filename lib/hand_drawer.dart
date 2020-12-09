@@ -27,6 +27,7 @@ class _MyDrawerState extends State<MyDrawer> {
   List<DrawingPoints> points = [];
   List<DrawingPoints> pathPoints = [];
   List<DrawingPoints> linePoints = [];
+  List<DrawingPoints> trianglePoints = [];
   File _imageFile;
 
 
@@ -36,7 +37,7 @@ class _MyDrawerState extends State<MyDrawer> {
   int nth = 1;
 
   controlNth(int nth,Option option){
-    if(option==Option.PATH) {
+    if(option==Option.PATH ||option==Option.TRIANGLE) {
       print(nth);
       if (nth < 3)
         this.nth++;
@@ -66,9 +67,10 @@ class _MyDrawerState extends State<MyDrawer> {
              return CustomPaint(
 
 
-                 painter: DrawingPainter(model:model,pointsList: points,pathPoints: pathPoints,linePoints: linePoints,),
+                 painter: DrawingPainter(model:model,pointsList: points,pathPoints: pathPoints,linePoints: linePoints,trianglePoints: trianglePoints),
                  size: Size.infinite);
            },
+
           ),
         ),
       ),
@@ -91,6 +93,18 @@ class _MyDrawerState extends State<MyDrawer> {
           }else if(widget.drawingOption == Option.PENCIL ){
             RenderBox renderBox = context.findRenderObject();
             linePoints.add(DrawingPoints(
+                nth: nth,
+                drawingOption: widget.drawingOption,
+                points: renderBox.globalToLocal(details.globalPosition),
+                paint: Paint()
+                  ..strokeCap = strokeCap
+                  ..isAntiAlias = true
+                  ..color = widget.selectedColor.withOpacity(opacity)
+                  ..strokeWidth = widget.strokeWidth));
+            controlNth(nth,widget.drawingOption);
+          }else if(widget.drawingOption == Option.TRIANGLE ){
+            RenderBox renderBox = context.findRenderObject();
+            trianglePoints.add(DrawingPoints(
                 nth: nth,
                 drawingOption: widget.drawingOption,
                 points: renderBox.globalToLocal(details.globalPosition),

@@ -129,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       });
                     },
                     min: 0.0,
-                    max: 20.0,
+                    max: 30.0,
                   ),
                 ),
               ),
@@ -291,6 +291,13 @@ class _MyHomePageState extends State<MyHomePage> {
                             showToast('Rectangle', context);
                           },
                           child: Icon(FontAwesome.times_rectangle),
+                        ),
+                        FloatingActionButton(
+                          onPressed: () {
+                            changing_option(Option.TRIANGLE);
+                            showToast('Triangle', context);
+                          },
+                          child: Icon(FontAwesome.exclamation_triangle),
                         ),
                         FloatingActionButton(
                           onPressed: () {
