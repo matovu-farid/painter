@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:drawing_app/hand_drawer.dart';
+import 'package:drawing_app/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_fluid_slider/flutter_fluid_slider.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:toast/toast.dart';
 
@@ -24,20 +26,24 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return MaterialApp(
-      title: 'Drawing App',
-      theme: ThemeData(
+    return ScopedModel<MyModel>(
+      model: MyModel(),
+      child: MaterialApp(
+        title: 'Drawing App',
+        theme: ThemeData(
 
-        primarySwatch: Colors.purple,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+          primarySwatch: Colors.purple,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: MyHomePage(title: 'Painter'),
       ),
-      home: MyHomePage(title: 'Painter'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
+
 
 
 
@@ -48,6 +54,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool guidesOn = true;
   Color selectedColor = Colors.amberAccent;
   Color pickerColor = Colors.amberAccent;
   int _counter = 0;
@@ -128,6 +135,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
+            Align(
+              alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Text('Guides'),
+                      ScopedModelDescendant<MyModel>(
+
+                        builder: (BuildContext context, Widget child, MyModel model) {
+                          return Switch.adaptive( value: model.guides, onChanged: model.changeGuides);
+                        },
+                      ),
+                    ],
+                  ),
+                ))
 
           ],
         ),

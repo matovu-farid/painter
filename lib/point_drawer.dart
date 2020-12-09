@@ -1,4 +1,6 @@
 
+import 'dart:ui';
+
 import 'package:drawing_app/options.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +72,28 @@ class DrawingPainter extends CustomPainter {
 
          }
 
-         if(currentPoint.drawingOption == Option.CIRCLE){
+         if(pathPoints!=[] ){
+          // pathPoints.map((e) => canvas.drawPoints(PointMode.points, [e.points], e.paint..style = PaintingStyle.stroke));
+         for(int i =0; i < pathPoints.length -1; i++){
+           canvas.drawPoints(PointMode.points, pathPoints.map((e) => e.points).toList(),
+               pathPoints[i].paint
+                 ..style = PaintingStyle.stroke
+               //..strokeWidth=4
+           );
+
+         }
+         }
+         if (linePoints!=[]) {
+
+        for(int i =0; i < linePoints.length -1; i++){
+          canvas.drawPoints(PointMode.points, linePoints.map((e) => e.points).toList(), linePoints[i].paint..style = PaintingStyle.stroke
+           // ..strokeWidth=4
+          );
+
+        }
+      }
+
+      if(currentPoint.drawingOption == Option.CIRCLE){
            drawFigure(canvas, currentPoint.paint, startPoint.points, currentPoint.points);
          }else if(currentPoint.drawingOption == Option.SQUARE){
            drawFigure(canvas, currentPoint.paint, startPoint.points, currentPoint.points,option: Option.SQUARE);

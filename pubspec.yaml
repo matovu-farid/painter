@@ -21,6 +21,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  scoped_model: ^1.1.0
   permission_handler: ^5.0.1+1
   flutter_fluid_slider: ^1.0.2
   image_gallery_saver: '^1.6.7'
