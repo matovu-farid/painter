@@ -97,6 +97,7 @@ class DrawingPainter extends CustomPainter {
                    PointMode.points, trianglePoints.map((e) => e.points).toList(),
                    trianglePoints[i].paint
                      ..style = PaintingStyle.stroke
+
                  //..strokeWidth=4
                );
              }
@@ -137,7 +138,7 @@ class DrawingPainter extends CustomPainter {
              for(int i = 0; i < pathPoints.length -1 ;i++){
                try{
                if(pathPoints[i].nth==1){
-               drawFigure(canvas, currentPoint.paint..style= PaintingStyle.stroke,
+               drawFigure(canvas, pathPoints[i].paint..style= PaintingStyle.stroke,
                  pathPoints[i].points,
                  pathPoints[i + 2].points,
                  option: Option.PATH,
@@ -154,7 +155,7 @@ class DrawingPainter extends CustomPainter {
         for(int i = 0; i < trianglePoints.length -1 ;i++){
           try{
             if(trianglePoints[i].nth==1){
-              drawFigure(canvas, currentPoint.paint..style= PaintingStyle.stroke,
+              drawFigure(canvas, trianglePoints[i].paint..style= PaintingStyle.stroke,
                   trianglePoints[i].points,
                   trianglePoints[i + 2].points,
                   option: Option.TRIANGLE,

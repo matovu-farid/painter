@@ -161,7 +161,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
           children: [
             FloatingActionButton(
-              onPressed: ()=>changing_option(Option.PENCIL),
+              onPressed: (){
+                changing_option(Option.PENCIL);
+                showToast('Line', context);
+                },
 
               tooltip: 'Increment',
               child: Icon(FontAwesome.pencil,color: optionSelected==Option.PENCIL?Colors.green:Colors.white,),
@@ -171,8 +174,9 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: (){
                 if(optionSelected==Option.RUBBER){
                   selectedColor = previousColor ??Colors.yellow;
-
                 }
+                showToast('hand', context);
+
                 changing_option(Option.HAND);},
               tooltip: 'Increment',
             ),FloatingActionButton(
