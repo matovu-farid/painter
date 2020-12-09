@@ -4,9 +4,11 @@ import 'package:drawing_app/options.dart';
 import 'package:drawing_app/point_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:screenshot/screenshot.dart';
 
 import 'drawing_points.dart';
+import 'model.dart';
 
 class MyDrawer extends StatefulWidget{
    Color selectedColor;
@@ -58,11 +60,16 @@ class _MyDrawerState extends State<MyDrawer> {
         controller: widget.screenshotController,
         child: Scaffold(
 
-          body: CustomPaint(
+
+          body: ScopedModelDescendant<MyModel>(
+           builder: (context,widget,model){
+             return CustomPaint(
 
 
-              painter: DrawingPainter(pointsList: points,pathPoints: pathPoints,linePoints: linePoints,),
-              size: Size.infinite),
+                 painter: DrawingPainter(model:model,pointsList: points,pathPoints: pathPoints,linePoints: linePoints,),
+                 size: Size.infinite);
+           },
+          ),
         ),
       ),
 

@@ -1,6 +1,7 @@
 
 import 'dart:ui';
 
+import 'package:drawing_app/model.dart';
 import 'package:drawing_app/options.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +11,10 @@ import 'drawing_points.dart';
 import 'dart:math';
 
 class DrawingPainter extends CustomPainter {
+  final MyModel model;
 
 
-  DrawingPainter( {this.pointsList,this.pathPoints,this.linePoints});
+  DrawingPainter( {this.model, this.pointsList,this.pathPoints,this.linePoints});
   List<DrawingPoints> pointsList;
   List<DrawingPoints> pathPoints;
   List<DrawingPoints> linePoints;
@@ -66,33 +68,32 @@ class DrawingPainter extends CustomPainter {
 
 
          endPoint = currentPoint;
+         if(model.guides) {
+           if (currentPoint.type == PointType.Start) {
+             startPoint = currentPoint;
+           }
 
-         if(currentPoint.type == PointType.Start) {
-           startPoint = currentPoint;
-
+           if (pathPoints != []) {
+             // pathPoints.map((e) => canvas.drawPoints(PointMode.points, [e.points], e.paint..style = PaintingStyle.stroke));
+             for (int i = 0; i < pathPoints.length - 1; i++) {
+               canvas.drawPoints(
+                   PointMode.points, pathPoints.map((e) => e.points).toList(),
+                   pathPoints[i].paint
+                     ..style = PaintingStyle.stroke
+                 //..strokeWidth=4
+               );
+             }
+           }
+           if (linePoints != []) {
+             for (int i = 0; i < linePoints.length - 1; i++) {
+               canvas.drawPoints(
+                   PointMode.points, linePoints.map((e) => e.points).toList(),
+                   linePoints[i].paint..style = PaintingStyle.stroke
+                 // ..strokeWidth=4
+               );
+             }
+           }
          }
-
-         if(pathPoints!=[] ){
-          // pathPoints.map((e) => canvas.drawPoints(PointMode.points, [e.points], e.paint..style = PaintingStyle.stroke));
-         for(int i =0; i < pathPoints.length -1; i++){
-           canvas.drawPoints(PointMode.points, pathPoints.map((e) => e.points).toList(),
-               pathPoints[i].paint
-                 ..style = PaintingStyle.stroke
-               //..strokeWidth=4
-           );
-
-         }
-         }
-         if (linePoints!=[]) {
-
-        for(int i =0; i < linePoints.length -1; i++){
-          canvas.drawPoints(PointMode.points, linePoints.map((e) => e.points).toList(), linePoints[i].paint..style = PaintingStyle.stroke
-           // ..strokeWidth=4
-          );
-
-        }
-      }
-
       if(currentPoint.drawingOption == Option.CIRCLE){
            drawFigure(canvas, currentPoint.paint, startPoint.points, currentPoint.points);
          }else if(currentPoint.drawingOption == Option.SQUARE){

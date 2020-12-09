@@ -54,7 +54,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool guidesOn = true;
   Color selectedColor = Colors.amberAccent;
   Color pickerColor = Colors.amberAccent;
   int _counter = 0;
