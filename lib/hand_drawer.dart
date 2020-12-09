@@ -24,6 +24,7 @@ class MyDrawer extends StatefulWidget{
 class _MyDrawerState extends State<MyDrawer> {
   List<DrawingPoints> points = [];
   List<DrawingPoints> pathPoints = [];
+  List<DrawingPoints> linePoints = [];
   File _imageFile;
 
 
@@ -32,11 +33,20 @@ class _MyDrawerState extends State<MyDrawer> {
   StrokeCap strokeCap = (Platform.isAndroid) ? StrokeCap.butt : StrokeCap.round;
   int nth = 1;
 
-  controlNth(int nth){
-    print(nth);
-    if(nth <3)this.nth++;
-     else this.nth = 1;
-
+  controlNth(int nth,Option option){
+    if(option==Option.PATH) {
+      print(nth);
+      if (nth < 3)
+        this.nth++;
+      else
+        this.nth = 1;
+    }else if (option ==Option.PENCIL){
+      print(nth);
+      if (nth < 2)
+        this.nth++;
+      else
+        this.nth = 1;
+    }
   }
 
   @override
@@ -51,7 +61,7 @@ class _MyDrawerState extends State<MyDrawer> {
           body: CustomPaint(
 
 
-              painter: DrawingPainter(pointsList: points,pathPoints: pathPoints,),
+              painter: DrawingPainter(pointsList: points,pathPoints: pathPoints,linePoints: linePoints,),
               size: Size.infinite),
         ),
       ),
@@ -59,7 +69,7 @@ class _MyDrawerState extends State<MyDrawer> {
       onPanDown: (details){
 
         setState(() {
-          if(widget.drawingOption == Option.PATH){
+          if(widget.drawingOption == Option.PATH ){
             RenderBox renderBox = context.findRenderObject();
             pathPoints.add(DrawingPoints(
                 nth: nth,
@@ -70,7 +80,19 @@ class _MyDrawerState extends State<MyDrawer> {
                   ..isAntiAlias = true
                   ..color = widget.selectedColor.withOpacity(opacity)
                   ..strokeWidth = widget.strokeWidth));
-            controlNth(nth);
+            controlNth(nth,widget.drawingOption);
+          }else if(widget.drawingOption == Option.PENCIL ){
+            RenderBox renderBox = context.findRenderObject();
+            linePoints.add(DrawingPoints(
+                nth: nth,
+                drawingOption: widget.drawingOption,
+                points: renderBox.globalToLocal(details.globalPosition),
+                paint: Paint()
+                  ..strokeCap = strokeCap
+                  ..isAntiAlias = true
+                  ..color = widget.selectedColor.withOpacity(opacity)
+                  ..strokeWidth = widget.strokeWidth));
+            controlNth(nth,widget.drawingOption);
           }
         });
 

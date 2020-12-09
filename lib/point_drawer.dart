@@ -10,9 +10,10 @@ import 'dart:math';
 class DrawingPainter extends CustomPainter {
 
 
-  DrawingPainter( {this.pointsList,this.pathPoints});
+  DrawingPainter( {this.pointsList,this.pathPoints,this.linePoints});
   List<DrawingPoints> pointsList;
   List<DrawingPoints> pathPoints;
+  List<DrawingPoints> linePoints;
 
   List<Offset> offsetPoints = List();
   drawFigure(Canvas canvas,Paint paint,Offset point1,Offset point2,{Option option = Option.CIRCLE,Offset controlPoint}){
@@ -40,6 +41,8 @@ class DrawingPainter extends CustomPainter {
 
     canvas.drawPath(path, paint);
     path.reset();
+  }else if(option == Option.PENCIL){
+    canvas.drawLine(point1, point2, paint);
   }
 
 
@@ -55,7 +58,6 @@ class DrawingPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    //Canvas canvas  = Canvas(recorder);
       for (int i = 0; i < pointsList.length - 1; i++) {
          DrawingPoints currentPoint= pointsList[i];
          DrawingPoints nextPoint= pointsList[i + 1];
@@ -78,7 +80,13 @@ class DrawingPainter extends CustomPainter {
            drawFigure(canvas, currentPoint.paint, startPoint.points, currentPoint.points,option: Option.RECTANGLE);
          }else if(currentPoint.type != PointType.End && nextPoint.type != PointType.End  &&currentPoint.drawingOption == Option.RUBBER){
            canvas.drawLine(currentPoint.points, nextPoint.points, currentPoint.paint..color = Colors.grey[50]);
-         }
+         }else if(currentPoint.drawingOption == Option.PENCIL){
+           for(int i = 0; i < linePoints.length -1 ;i++){
+
+               if(linePoints[i].nth==1){
+                 drawFigure(canvas, linePoints[i].paint..style =PaintingStyle.stroke, linePoints[i].points, linePoints[i + 1].points,option: Option.PENCIL);}
+
+         }}
 
         else if (currentPoint.type != PointType.End && nextPoint.type != PointType.End  && currentPoint.drawingOption == Option.HAND) {
           canvas.drawLine(currentPoint.points, nextPoint.points, currentPoint.paint);
@@ -89,9 +97,9 @@ class DrawingPainter extends CustomPainter {
                if(pathPoints[i].nth==1){
                drawFigure(canvas, currentPoint.paint..style= PaintingStyle.stroke,
                  pathPoints[i].points,
-                 pathPoints[i + 1].points,
+                 pathPoints[i + 2].points,
                  option: Option.PATH,
-                 controlPoint: pathPoints[i+2].points
+                 controlPoint: pathPoints[i+1].points
                );}
                }catch(e){
 

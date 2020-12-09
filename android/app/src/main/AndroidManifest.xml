@@ -8,10 +8,11 @@
     <!-- Permissions options for the `storage` group -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET permission"/>
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="drawing_app"
-        android:icon="@mipmap/ic_launcher">
+        android:label="painter"
+        android:icon="@mipmap/launcher_icon">
         android:requestLegacyExternalStorage="true"
         <activity
             android:name=".MainActivity"
