@@ -14,20 +14,21 @@ class DrawingPainter extends CustomPainter {
   final MyModel model;
 
 
+
   DrawingPainter( {this.model, this.pointsList,this.pathPoints,this.linePoints,this.trianglePoints});
   List<DrawingPoints> pointsList;
   List<DrawingPoints> pathPoints;
   List<DrawingPoints> linePoints;
   List<DrawingPoints> trianglePoints;
 
+
   List<Offset> offsetPoints = List();
-  drawFigure(Canvas canvas,Paint paint,Offset point1,Offset point2,{Option option = Option.CIRCLE,Offset controlPoint}){
+  drawFigure(Canvas canvas,Paint paint,Offset point1,Offset point2,{Option option = Option.CIRCLE,Offset controlPoint,MyModel model}){
     double x = point2.dx - point1.dx;
     double y = point2.dy - point1.dy;
     Offset center = Offset(point1.dx + x * 0.5, point1.dy + y * 0.5);
     double radius = 0.5 * sqrt(x * x + y * y);
   if(option == Option.CIRCLE) {
-
     canvas.drawCircle(center, radius,
         paint);
   }else if (option == Option.SQUARE){
@@ -43,15 +44,17 @@ class DrawingPainter extends CustomPainter {
     Path path = Path();
     path.moveTo(point1.dx, point1.dy);
     path.quadraticBezierTo(controlPoint.dx??center.dx + radius, controlPoint.dy ??center.dy + radius, point2.dx, point2.dy);
-
     canvas.drawPath(path, paint);
     path.reset();
+    model.changeGuides(false);
   }else if(option == Option.TRIANGLE){
     var vertices = Vertices(VertexMode.triangles, [point1,point2,controlPoint]);
     canvas.drawVertices(vertices, BlendMode.clear, paint);
+    model.changeGuides(false);
   }
   else if(option == Option.PENCIL){
     canvas.drawLine(point1, point2, paint);
+    model.changeGuides(false);
   }
 
 
@@ -127,7 +130,7 @@ class DrawingPainter extends CustomPainter {
            for(int i = 0; i < linePoints.length -1 ;i++){
 
                if(linePoints[i].nth==1){
-                 drawFigure(canvas, linePoints[i].paint..style =PaintingStyle.stroke, linePoints[i].points, linePoints[i + 1].points,option: Option.PENCIL);}
+                 drawFigure(canvas, linePoints[i].paint..style =PaintingStyle.stroke, linePoints[i].points, linePoints[i + 1].points,option: Option.PENCIL,model: model);}
 
          }}
 
@@ -142,7 +145,8 @@ class DrawingPainter extends CustomPainter {
                  pathPoints[i].points,
                  pathPoints[i + 2].points,
                  option: Option.PATH,
-                 controlPoint: pathPoints[i+1].points
+                 controlPoint: pathPoints[i+1].points,
+                 model: model
                );}
                }catch(e){
 
@@ -159,6 +163,7 @@ class DrawingPainter extends CustomPainter {
                   trianglePoints[i].points,
                   trianglePoints[i + 2].points,
                   option: Option.TRIANGLE,
+                  model:model,
                   controlPoint: trianglePoints[i+1].points
               );}
           }catch(e){
@@ -179,7 +184,6 @@ class DrawingPainter extends CustomPainter {
         // }
 
       }
-
 
   }
   @override

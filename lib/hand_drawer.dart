@@ -55,101 +55,103 @@ class _MyDrawerState extends State<MyDrawer> {
   @override
   Widget build(BuildContext context) {
 
-    return GestureDetector(
+    return ScopedModelDescendant<MyModel>(
+      builder: (BuildContext context, Widget child, MyModel model) {
+        return GestureDetector(
 
-      child: Screenshot(
-        controller: widget.screenshotController,
-        child: Scaffold(
-
-
-          body: ScopedModelDescendant<MyModel>(
-           builder: (context,widget,model){
-             return CustomPaint(
+          child: Screenshot(
+            controller: widget.screenshotController,
+            child: Scaffold(
 
 
-                 painter: DrawingPainter(model:model,pointsList: points,pathPoints: pathPoints,linePoints: linePoints,trianglePoints: trianglePoints),
-                 size: Size.infinite);
-           },
-
+              body: CustomPaint(
+                  painter: DrawingPainter(model:model,pointsList: points,pathPoints: pathPoints,linePoints: linePoints,trianglePoints: trianglePoints),
+                  size: Size.infinite),
+            ),
           ),
-        ),
-      ),
 
-      onPanDown: (details){
-
-        setState(() {
-          if(widget.drawingOption == Option.PATH ){
+          onPanDown: (details){
+            model.changeGuides(true);
             RenderBox renderBox = context.findRenderObject();
-            pathPoints.add(DrawingPoints(
-                nth: nth,
-                drawingOption: widget.drawingOption,
-                points: renderBox.globalToLocal(details.globalPosition),
-                paint: Paint()
-                  ..strokeCap = strokeCap
-                  ..isAntiAlias = true
-                  ..color = widget.selectedColor.withOpacity(opacity)
-                  ..strokeWidth = widget.strokeWidth));
-            controlNth(nth,widget.drawingOption);
-          }else if(widget.drawingOption == Option.PENCIL ){
-            RenderBox renderBox = context.findRenderObject();
-            linePoints.add(DrawingPoints(
-                nth: nth,
-                drawingOption: widget.drawingOption,
-                points: renderBox.globalToLocal(details.globalPosition),
-                paint: Paint()
-                  ..strokeCap = strokeCap
-                  ..isAntiAlias = true
-                  ..color = widget.selectedColor.withOpacity(opacity)
-                  ..strokeWidth = widget.strokeWidth));
-            controlNth(nth,widget.drawingOption);
-          }else if(widget.drawingOption == Option.TRIANGLE ){
-            RenderBox renderBox = context.findRenderObject();
-            trianglePoints.add(DrawingPoints(
-                nth: nth,
-                drawingOption: widget.drawingOption,
-                points: renderBox.globalToLocal(details.globalPosition),
-                paint: Paint()
-                  ..strokeCap = strokeCap
-                  ..isAntiAlias = true
-                  ..color = widget.selectedColor.withOpacity(opacity)
-                  ..strokeWidth = widget.strokeWidth));
-            controlNth(nth,widget.drawingOption);
-          }
-        });
+            print(renderBox.globalToLocal(details.globalPosition));
+            setState(() {
+              if(widget.drawingOption == Option.PATH ){
 
-      },
+                pathPoints.add(DrawingPoints(
+                    nth: nth,
+                    drawingOption: widget.drawingOption,
+                    points: renderBox.globalToLocal(details.globalPosition),
+                    paint: Paint()
+                      ..strokeCap = strokeCap
+                      ..isAntiAlias = true
+                      ..color = widget.selectedColor.withOpacity(opacity)
+                      ..strokeWidth = widget.strokeWidth));
+                controlNth(nth,widget.drawingOption);
+              }else if(widget.drawingOption == Option.PENCIL ){
+                RenderBox renderBox = context.findRenderObject();
+                linePoints.add(DrawingPoints(
+                    nth: nth,
+                    drawingOption: widget.drawingOption,
+                    points: renderBox.globalToLocal(details.globalPosition),
+                    paint: Paint()
+                      ..strokeCap = strokeCap
+                      ..isAntiAlias = true
+                      ..color = widget.selectedColor.withOpacity(opacity)
+                      ..strokeWidth = widget.strokeWidth));
+                controlNth(nth,widget.drawingOption);
+              }else if(widget.drawingOption == Option.TRIANGLE ){
+                RenderBox renderBox = context.findRenderObject();
+                trianglePoints.add(DrawingPoints(
+                    nth: nth,
+                    drawingOption: widget.drawingOption,
+                    points: renderBox.globalToLocal(details.globalPosition),
+                    paint: Paint()
+                      ..strokeCap = strokeCap
+                      ..isAntiAlias = true
+                      ..color = widget.selectedColor.withOpacity(opacity)
+                      ..strokeWidth = widget.strokeWidth));
+                controlNth(nth,widget.drawingOption);
+              }
+            });
 
-      onPanUpdate: (details) {
-        setState(() {
-          RenderBox renderBox = context.findRenderObject();
-          points.add(DrawingPoints(
-            drawingOption: widget.drawingOption,
-              points: renderBox.globalToLocal(details.globalPosition),
-              paint: Paint()
-                ..strokeCap = strokeCap
-                ..isAntiAlias = true
-                ..color = widget.selectedColor.withOpacity(opacity)
-                ..strokeWidth = widget.strokeWidth));
-        });
-      },
-      onPanStart: (details) {
-        setState(() {
-          RenderBox renderBox = context.findRenderObject();
-          points.add(DrawingPoints(
-            type: PointType.Start,
-            drawingOption: widget.drawingOption,
-              points: renderBox.globalToLocal(details.globalPosition),
-              paint: Paint()
-                ..strokeCap = strokeCap
-                ..isAntiAlias = true
-                ..color = widget.selectedColor.withOpacity(opacity)
-                ..strokeWidth = widget.strokeWidth));
-        });
-      },
-      onPanEnd: (details) {
-        setState(() {
-          points.last.type=PointType.End;
-        });
+          },
+
+          onPanUpdate: (details) {
+            RenderBox renderBox = context.findRenderObject();
+            var drawingPoints = renderBox.globalToLocal(details.globalPosition);
+            print(drawingPoints);
+            setState(() {
+              points.add(DrawingPoints(
+                  drawingOption: widget.drawingOption,
+                  points: drawingPoints,
+                  paint: Paint()
+                    ..strokeCap = strokeCap
+                    ..isAntiAlias = true
+                    ..color = widget.selectedColor.withOpacity(opacity)
+                    ..strokeWidth = widget.strokeWidth));
+            });
+          },
+          onPanStart: (details) {
+            setState(() {
+              RenderBox renderBox = context.findRenderObject();
+              points.add(DrawingPoints(
+                  type: PointType.Start,
+                  drawingOption: widget.drawingOption,
+                  points: renderBox.globalToLocal(details.globalPosition),
+                  paint: Paint()
+                    ..strokeCap = strokeCap
+                    ..isAntiAlias = true
+                    ..color = widget.selectedColor.withOpacity(opacity)
+                    ..strokeWidth = widget.strokeWidth));
+            });
+          },
+          onPanEnd: (details) {
+            setState(() {
+              points.last.type=PointType.End;
+            });
+          },
+
+        );
       },
 
     );

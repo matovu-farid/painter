@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:drawing_app/crossFade.dart';
 import 'package:drawing_app/hand_drawer.dart';
 import 'package:drawing_app/model.dart';
+import 'package:drawing_app/starting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_fluid_slider/flutter_fluid_slider.dart';
@@ -29,13 +31,20 @@ class MyApp extends StatelessWidget {
     return ScopedModel<MyModel>(
       model: MyModel(),
       child: MaterialApp(
+        routes: {
+          'startPage':(_)=>StartingPage(),
+          'homePage':(_)=>MyHomePage(title: 'Painter',),
+          'crossFade':(_)=>MyCrossFade()
+        },
+        initialRoute: 'crossFade',
         title: 'Drawing App',
         theme: ThemeData(
 
           primarySwatch: Colors.purple,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: MyHomePage(title: 'Painter'),
+       // home: MyHomePage(title: 'Painter'),
+       // home: StartingPage(),
       ),
     );
   }
@@ -98,22 +107,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 
-    return Scaffold(
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Scaffold(
 
-      appBar: AppBar(
+        appBar: AppBar(
 
-        title: Center(child: Text(widget.title)),
-      ),
-      body: Center(
-
-        child: Stack(
+          title: Center(child: Text(widget.title)),
+        ),
+        body: Stack(
           children: <Widget>[
 
             MyDrawer( selectedColor: selectedColor,
               pickedColor:pickerColor,strokeWidth:stokeWidth,
               drawingOption: optionSelected,
               screenshotController: screenshotController,
-            ),
+             ),
             Align(
               alignment: Alignment.centerRight,
               child: Padding(
@@ -153,183 +163,183 @@ class _MyHomePageState extends State<MyHomePage> {
 
           ],
         ),
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
 
-          children: [
-            FloatingActionButton(
-              onPressed: (){
-                changing_option(Option.PENCIL);
-                showToast('Line', context);
-                },
+            children: [
+              FloatingActionButton(
+                onPressed: (){
+                  changing_option(Option.PENCIL);
+                  showToast('Line', context);
+                  },
 
-              tooltip: 'Increment',
-              child: Icon(FontAwesome.pencil,color: optionSelected==Option.PENCIL?Colors.green:Colors.white,),
-            ),
-            FloatingActionButton(
-              child: Icon(FontAwesome.hand_pointer_o,color: optionSelected==Option.HAND?Colors.green:Colors.white,),
-              onPressed: (){
-                if(optionSelected==Option.RUBBER){
-                  selectedColor = previousColor ??Colors.yellow;
-                }
-                showToast('hand', context);
-
-                changing_option(Option.HAND);},
-              tooltip: 'Increment',
-            ),FloatingActionButton(
-              onPressed: (){
-                showToast('Pick a color', context,gravity: Toast.BOTTOM);
-                showDialog(
-                  context: context,
-                  child: AlertDialog(
-                    title: const Text('Pick a color!'),
-                    content: SingleChildScrollView(
-                      child: ColorPicker(
-                        pickerColor: pickerColor,
-                        onColorChanged: changeColor,
-                        showLabel: true,
-                        pickerAreaHeightPercent: 0.8,
-                      ),
-
-                    ),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: const Text('Got it'),
-                        onPressed: () {
-                          setState(() => selectedColor = pickerColor);
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              },
-              tooltip: 'choose color',
-              child: Icon(FontAwesome.dashboard,),
-
-            ),
-
-            FloatingActionButton(
-
-              onPressed: (){
-                changing_option(Option.SAVE);
-                _imageFile = null;
-                screenshotController
-                    .capture()
-                    .then((File image) async {
-                  //print("Capture Done");
-                  setState(() {
-                    _imageFile = image;
-                  });
-
-                  if(await Permission.storage.request().isGranted){
-                     final result = await ImageGallerySaver.saveImage(image
-                        .readAsBytesSync());
-                    // if(recorder.isRecording){
-                    //    var size= MediaQuery.of(context).size;
-                    //     var image=  await recorder.endRecording().toImage(size.width as int, size.height as int);
-                    //
-                    // }
-                    // Save image to gallery,  Needs plugin  https://pub.dev/packages/image_gallery_saver
-
-                    Toast.show('Image Saved to gallery', context,duration: 1);
+                tooltip: 'Increment',
+                child: Icon(FontAwesome.pencil,color: optionSelected==Option.PENCIL?Colors.green:Colors.white,),
+              ),
+              FloatingActionButton(
+                child: Icon(FontAwesome.hand_pointer_o,color: optionSelected==Option.HAND?Colors.green:Colors.white,),
+                onPressed: (){
+                  if(optionSelected==Option.RUBBER){
+                    selectedColor = previousColor ??Colors.yellow;
                   }
-                }).catchError((onError) {
-                  print(onError);
-                });
-                },
+                  showToast('hand', context);
 
-              tooltip: 'save',
-              child: Icon(FontAwesome.save,color: optionSelected==Option.SAVE?Colors.green:Colors.white,),
-
-            ),
-            FloatingActionButton(
-              onPressed: (){
-                showDialog(
+                  changing_option(Option.HAND);},
+                tooltip: 'Increment',
+              ),FloatingActionButton(
+                onPressed: (){
+                  showToast('Pick a color', context,gravity: Toast.BOTTOM);
+                  showDialog(
                     context: context,
-                  child: AlertDialog(
-                    content: Wrap(
-                      spacing: 2,
-                      children: [
-                        FloatingActionButton(
-                          onPressed: (){
-
-                            changing_option(Option.RUBBER);
-                            showToast('Eraser', context);
-
-                            },
-                          child: Icon(FontAwesome.eraser,),
-
-
-                          tooltip: 'Eraser',
+                    child: AlertDialog(
+                      title: const Text('Pick a color!'),
+                      content: SingleChildScrollView(
+                        child: ColorPicker(
+                          pickerColor: pickerColor,
+                          onColorChanged: changeColor,
+                          showLabel: true,
+                          pickerAreaHeightPercent: 0.8,
                         ),
-                        FloatingActionButton(
 
-                          onPressed: ()=>changing_option(Option.SQUARE),
-
-                          tooltip: 'square',
-                          child: Icon(FontAwesome.square_o,),
-
-                        ),
-                        FloatingActionButton(
-                          onPressed: () {
-                            changing_option(Option.CIRCLE);
-                            showToast('Circle', context);
-
-                          },
-                          child: Icon(FontAwesome.circle_o),
-                        ),
-                        FloatingActionButton(
-                            onPressed: () {
-                              changing_option(Option.OVAL);
-                              showToast('Oval', context);
-                            },
-                            child: Icon(FontAwesome.circle),
-                          ),
-                        FloatingActionButton(
-                          onPressed: () {
-                            changing_option(Option.RECTANGLE);
-                            showToast('Rectangle', context);
-                          },
-                          child: Icon(FontAwesome.times_rectangle),
-                        ),
-                        FloatingActionButton(
-                          onPressed: () {
-                            changing_option(Option.TRIANGLE);
-                            showToast('Triangle', context);
-                          },
-                          child: Icon(FontAwesome.exclamation_triangle),
-                        ),
-                        FloatingActionButton(
-                          onPressed: () {
-                            changing_option(Option.PATH);
-                            showToast('Path', context);
-                          },
-                          child: Icon(FontAwesome.circle_o_notch),
-                        ),
-                        ],
-                    ),
-                    actions: [
-                      FlatButton(
-                        child: const Text('Done'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
                       ),
-                    ],
-                  )
+                      actions: <Widget>[
+                        FlatButton(
+                          child: const Text('Got it'),
+                          onPressed: () {
+                            setState(() => selectedColor = pickerColor);
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                tooltip: 'choose color',
+                child: Icon(FontAwesome.dashboard,),
 
-                );
-              },
-              tooltip: 'Increment',
-              child: Icon(Icons.add),
-            ),
-          ],
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+              ),
+
+              FloatingActionButton(
+
+                onPressed: (){
+                  changing_option(Option.SAVE);
+                  _imageFile = null;
+                  screenshotController
+                      .capture()
+                      .then((File image) async {
+                    //print("Capture Done");
+                    setState(() {
+                      _imageFile = image;
+                    });
+
+                    if(await Permission.storage.request().isGranted){
+                       final result = await ImageGallerySaver.saveImage(image
+                          .readAsBytesSync());
+                      // if(recorder.isRecording){
+                      //    var size= MediaQuery.of(context).size;
+                      //     var image=  await recorder.endRecording().toImage(size.width as int, size.height as int);
+                      //
+                      // }
+                      // Save image to gallery,  Needs plugin  https://pub.dev/packages/image_gallery_saver
+
+                      Toast.show('Image Saved to gallery', context,duration: 1);
+                    }
+                  }).catchError((onError) {
+                    print(onError);
+                  });
+                  },
+
+                tooltip: 'save',
+                child: Icon(FontAwesome.save,color: optionSelected==Option.SAVE?Colors.green:Colors.white,),
+
+              ),
+              FloatingActionButton(
+                onPressed: (){
+                  showDialog(
+                      context: context,
+                    child: AlertDialog(
+                      content: Wrap(
+                        spacing: 2,
+                        children: [
+                          FloatingActionButton(
+                            onPressed: (){
+
+                              changing_option(Option.RUBBER);
+                              showToast('Eraser', context);
+
+                              },
+                            child: Icon(FontAwesome.eraser,),
+
+
+                            tooltip: 'Eraser',
+                          ),
+                          FloatingActionButton(
+
+                            onPressed: ()=>changing_option(Option.SQUARE),
+
+                            tooltip: 'square',
+                            child: Icon(FontAwesome.square_o,),
+
+                          ),
+                          FloatingActionButton(
+                            onPressed: () {
+                              changing_option(Option.CIRCLE);
+                              showToast('Circle', context);
+
+                            },
+                            child: Icon(FontAwesome.circle_o),
+                          ),
+                          FloatingActionButton(
+                              onPressed: () {
+                                changing_option(Option.OVAL);
+                                showToast('Oval', context);
+                              },
+                              child: Icon(FontAwesome.circle),
+                            ),
+                          FloatingActionButton(
+                            onPressed: () {
+                              changing_option(Option.RECTANGLE);
+                              showToast('Rectangle', context);
+                            },
+                            child: Icon(FontAwesome.times_rectangle),
+                          ),
+                          FloatingActionButton(
+                            onPressed: () {
+                              changing_option(Option.TRIANGLE);
+                              showToast('Triangle', context);
+                            },
+                            child: Icon(FontAwesome.exclamation_triangle),
+                          ),
+                          FloatingActionButton(
+                            onPressed: () {
+                              changing_option(Option.PATH);
+                              showToast('Path', context);
+                            },
+                            child: Icon(FontAwesome.circle_o_notch),
+                          ),
+                          ],
+                      ),
+                      actions: [
+                        FlatButton(
+                          child: const Text('Done'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    )
+
+                  );
+                },
+                tooltip: 'Increment',
+                child: Icon(Icons.add),
+              ),
+            ],
+          ),
+        ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
