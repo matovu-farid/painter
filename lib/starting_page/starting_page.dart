@@ -1,17 +1,9 @@
-import 'dart:async';
-import 'dart:math';
-import 'dart:ui';
 
-import 'package:drawing_app/drawing_points.dart';
-import 'package:drawing_app/options.dart';
-import 'package:drawing_app/point_drawer.dart';
-import 'package:drawing_app/start_page_painter.dart';
+import 'dart:ui';
+import 'package:drawing_app/created_classes/drawing_point_class.dart';
+import 'package:drawing_app/starting_page/start_page_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter/painting.dart';
-import 'package:scoped_model/scoped_model.dart';
-
-import 'model.dart';
 
 class StartingPage extends StatefulWidget {
   @override

@@ -1,13 +1,10 @@
 
 import 'dart:ui';
-
+import 'package:drawing_app/created_classes/drawing_point_class.dart';
+import 'package:drawing_app/created_classes/options.dart';
 import 'package:drawing_app/model.dart';
-import 'package:drawing_app/options.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-
-import 'drawing_points.dart';
 import 'dart:math';
 
 class DrawingPainter extends CustomPainter {

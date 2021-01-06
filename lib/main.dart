@@ -1,20 +1,17 @@
 import 'dart:io';
-
-import 'package:drawing_app/crossFade.dart';
-import 'package:drawing_app/hand_drawer.dart';
 import 'package:drawing_app/model.dart';
-import 'package:drawing_app/starting_page.dart';
+import 'package:drawing_app/starting_page/starting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_fluid_slider/flutter_fluid_slider.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:toast/toast.dart';
-
-import 'options.dart';
+import 'controller.dart';
+import 'created_classes/options.dart';
+import 'created_widgets/save_button.dart';
+import 'home_page/my_drawer.dart';
 
 
 
@@ -34,7 +31,7 @@ class MyApp extends StatelessWidget {
         routes: {
           'startPage':(_)=>StartingPage(),
           'homePage':(_)=>MyHomePage(title: 'Painter',),
-          'crossFade':(_)=>MyCrossFade()
+          'crossFade':(_)=>ControllerPage()
         },
         initialRoute: 'crossFade',
         title: 'Drawing App',
@@ -52,10 +49,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
-
-
-
-
   final String title;
 
   @override
@@ -65,7 +58,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   Color selectedColor = Colors.amberAccent;
   Color pickerColor = Colors.amberAccent;
-  int _counter = 0;
+
   File _imageFile;
   List<Color> colors = [
     Colors.red,
@@ -75,12 +68,9 @@ class _MyHomePageState extends State<MyHomePage> {
     Colors.black
   ];
 
-
-
-
   Option optionSelected = Option.HAND;
   Color previousColor ;
-  void changing_option(Option option){
+  void changingOption(Option option){
 
     setState(() {
       optionSelected = option;
@@ -119,47 +109,9 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Stack(
           children: <Widget>[
 
-            MyDrawer( selectedColor: selectedColor,
-              pickedColor:pickerColor,strokeWidth:stokeWidth,
-              drawingOption: optionSelected,
-              screenshotController: screenshotController,
-             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 100,right: 10,top: 10),
-                child: RotatedBox(
-                  quarterTurns: -1,
-                  child: FluidSlider(
-                    thumbDiameter: 35,
-                    value: stokeWidth,
-                    onChanged: (double newValue) {
-                      setState(() {
-                        stokeWidth = newValue;
-                      });
-                    },
-                    min: 0.0,
-                    max: 30.0,
-                  ),
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Text('Guides'),
-                      ScopedModelDescendant<MyModel>(
-
-                        builder: (BuildContext context, Widget child, MyModel model) {
-                          return Switch.adaptive( value: model.guides, onChanged: model.changeGuides);
-                        },
-                      ),
-                    ],
-                  ),
-                ))
+            buildMyDrawer(),
+            buildSlider(),
+            buildGuides()
 
           ],
         ),
@@ -169,92 +121,12 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
 
             children: [
-              FloatingActionButton(
-                onPressed: (){
-                  changing_option(Option.PENCIL);
-                  showToast('Line', context);
-                  },
+              buildLineButton(context),
+              buildHandButton(context),
+              buildColorButton(context, changeColor),
+              buildSaveButton(),
 
-                tooltip: 'Increment',
-                child: Icon(FontAwesome.pencil,color: optionSelected==Option.PENCIL?Colors.green:Colors.white,),
-              ),
-              FloatingActionButton(
-                child: Icon(FontAwesome.hand_pointer_o,color: optionSelected==Option.HAND?Colors.green:Colors.white,),
-                onPressed: (){
-                  if(optionSelected==Option.RUBBER){
-                    selectedColor = previousColor ??Colors.yellow;
-                  }
-                  showToast('hand', context);
 
-                  changing_option(Option.HAND);},
-                tooltip: 'Increment',
-              ),FloatingActionButton(
-                onPressed: (){
-                  showToast('Pick a color', context,gravity: Toast.BOTTOM);
-                  showDialog(
-                    context: context,
-                    child: AlertDialog(
-                      title: const Text('Pick a color!'),
-                      content: SingleChildScrollView(
-                        child: ColorPicker(
-                          pickerColor: pickerColor,
-                          onColorChanged: changeColor,
-                          showLabel: true,
-                          pickerAreaHeightPercent: 0.8,
-                        ),
-
-                      ),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: const Text('Got it'),
-                          onPressed: () {
-                            setState(() => selectedColor = pickerColor);
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                tooltip: 'choose color',
-                child: Icon(FontAwesome.dashboard,),
-
-              ),
-
-              FloatingActionButton(
-
-                onPressed: (){
-                  changing_option(Option.SAVE);
-                  _imageFile = null;
-                  screenshotController
-                      .capture()
-                      .then((File image) async {
-                    //print("Capture Done");
-                    setState(() {
-                      _imageFile = image;
-                    });
-
-                    if(await Permission.storage.request().isGranted){
-                       final result = await ImageGallerySaver.saveImage(image
-                          .readAsBytesSync());
-                      // if(recorder.isRecording){
-                      //    var size= MediaQuery.of(context).size;
-                      //     var image=  await recorder.endRecording().toImage(size.width as int, size.height as int);
-                      //
-                      // }
-                      // Save image to gallery,  Needs plugin  https://pub.dev/packages/image_gallery_saver
-
-                      Toast.show('Image Saved to gallery', context,duration: 1);
-                    }
-                  }).catchError((onError) {
-                    print(onError);
-                  });
-                  },
-
-                tooltip: 'save',
-                child: Icon(FontAwesome.save,color: optionSelected==Option.SAVE?Colors.green:Colors.white,),
-
-              ),
               FloatingActionButton(
                 onPressed: (){
                   showDialog(
@@ -263,71 +135,17 @@ class _MyHomePageState extends State<MyHomePage> {
                       content: Wrap(
                         spacing: 2,
                         children: [
-                          FloatingActionButton(
-                            onPressed: (){
+                          buildRubberButton(context),
+                          buildSquareButton(),
+                          buildCircleButton(context),
 
-                              changing_option(Option.RUBBER);
-                              showToast('Eraser', context);
-
-                              },
-                            child: Icon(FontAwesome.eraser,),
-
-
-                            tooltip: 'Eraser',
-                          ),
-                          FloatingActionButton(
-
-                            onPressed: ()=>changing_option(Option.SQUARE),
-
-                            tooltip: 'square',
-                            child: Icon(FontAwesome.square_o,),
-
-                          ),
-                          FloatingActionButton(
-                            onPressed: () {
-                              changing_option(Option.CIRCLE);
-                              showToast('Circle', context);
-
-                            },
-                            child: Icon(FontAwesome.circle_o),
-                          ),
-                          FloatingActionButton(
-                              onPressed: () {
-                                changing_option(Option.OVAL);
-                                showToast('Oval', context);
-                              },
-                              child: Icon(FontAwesome.circle),
-                            ),
-                          FloatingActionButton(
-                            onPressed: () {
-                              changing_option(Option.RECTANGLE);
-                              showToast('Rectangle', context);
-                            },
-                            child: Icon(FontAwesome.times_rectangle),
-                          ),
-                          FloatingActionButton(
-                            onPressed: () {
-                              changing_option(Option.TRIANGLE);
-                              showToast('Triangle', context);
-                            },
-                            child: Icon(FontAwesome.exclamation_triangle),
-                          ),
-                          FloatingActionButton(
-                            onPressed: () {
-                              changing_option(Option.PATH);
-                              showToast('Path', context);
-                            },
-                            child: Icon(FontAwesome.circle_o_notch),
-                          ),
+                          buildOvalButton(context),
+                          buildTriangleButton(context),
+                          buildPathButton(context),
                           ],
                       ),
                       actions: [
-                        FlatButton(
-                          child: const Text('Done'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
+                        buildDoneButton(context),
                       ],
                     )
 
@@ -342,7 +160,197 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+  SaveButton buildSaveButton() => SaveButton(changingOption: changingOption, screenshotController: screenshotController, optionSelected: optionSelected,);
+
+  FlatButton buildDoneButton(BuildContext context) {
+    return FlatButton(
+                        child: const Text('Done'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      );
+  }
+
+  FloatingActionButton buildPathButton(BuildContext context) {
+    return FloatingActionButton(
+                          onPressed: () {
+                            changingOption(Option.PATH);
+                            showToast('Path', context);
+                          },
+                          child: Icon(FontAwesome.circle_o_notch),
+                        );
+  }
+
+  FloatingActionButton buildTriangleButton(BuildContext context) {
+    return FloatingActionButton(
+                          onPressed: () {
+                            changingOption(Option.TRIANGLE);
+                            showToast('Triangle', context);
+                          },
+                          child: Icon(FontAwesome.exclamation_triangle),
+                        );
+  }
+
+  FloatingActionButton buildOvalButton(BuildContext context) {
+    return FloatingActionButton(
+                          onPressed: () {
+                            changingOption(Option.RECTANGLE);
+                            showToast('Rectangle', context);
+                          },
+                          child: Icon(FontAwesome.times_rectangle),
+                        );
+  }
+
+  FloatingActionButton buildCircleButton(BuildContext context) {
+    return FloatingActionButton(
+                          onPressed: () {
+                            changingOption(Option.CIRCLE);
+                            showToast('Circle', context);
+
+                          },
+                          child: Icon(FontAwesome.circle_o),
+                        );
+  }
+
+  FloatingActionButton buildSquareButton() {
+    return FloatingActionButton(
+
+                          onPressed: ()=>changingOption(Option.SQUARE),
+
+                          tooltip: 'square',
+                          child: Icon(FontAwesome.square_o,),
+
+                        );
+  }
+
+  FloatingActionButton buildRubberButton(BuildContext context) {
+    return FloatingActionButton(
+                          onPressed: (){
+
+                            changingOption(Option.RUBBER);
+                            showToast('Eraser', context);
+
+                            },
+                          child: Icon(FontAwesome.eraser,),
+
+
+                          tooltip: 'Eraser',
+                        );
+  }
+
+  FloatingActionButton buildColorButton(BuildContext context, void changeColor(Color color)) {
+    return FloatingActionButton(
+              onPressed: (){
+                showToast('Pick a color', context,gravity: Toast.BOTTOM);
+                showDialog(
+                  context: context,
+                  child: AlertDialog(
+                    title: const Text('Pick a color!'),
+                    content: SingleChildScrollView(
+                      child: ColorPicker(
+                        pickerColor: pickerColor,
+                        onColorChanged: changeColor,
+                        showLabel: true,
+                        pickerAreaHeightPercent: 0.8,
+                      ),
+
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: const Text('Got it'),
+                        onPressed: () {
+                          setState(() => selectedColor = pickerColor);
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+              tooltip: 'choose color',
+              child: Icon(FontAwesome.dashboard,),
+
+            );
+  }
+
+  FloatingActionButton buildHandButton(BuildContext context) {
+    return FloatingActionButton(
+              child: Icon(FontAwesome.hand_pointer_o,color: optionSelected==Option.HAND?Colors.green:Colors.white,),
+              onPressed: (){
+                if(optionSelected==Option.RUBBER){
+                  selectedColor = previousColor ??Colors.yellow;
+                }
+                showToast('hand', context);
+
+                changingOption(Option.HAND);},
+              tooltip: 'Increment',
+            );
+  }
+
+  FloatingActionButton buildLineButton(BuildContext context) {
+    return FloatingActionButton(
+              onPressed: (){
+                changingOption(Option.PENCIL);
+                showToast('Line', context);
+                },
+
+              tooltip: 'Increment',
+              child: Icon(FontAwesome.pencil,color: optionSelected==Option.PENCIL?Colors.green:Colors.white,),
+            );
+  }
+
+  Widget buildMyDrawer() {
+    return MyDrawer( selectedColor: selectedColor,
+            pickedColor:pickerColor,strokeWidth:stokeWidth,
+            drawingOption: optionSelected,
+            screenshotController: screenshotController,
+           );
+  }
+
+  Widget buildGuides() {
+    return Align(
+            alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Text('Guides'),
+                    ScopedModelDescendant<MyModel>(
+
+                      builder: (BuildContext context, Widget child, MyModel model) {
+                        return Switch.adaptive( value: model.guides, onChanged: model.changeGuides);
+                      },
+                    ),
+                  ],
+                ),
+              ));
+  }
+
+  Widget buildSlider() {
+    return Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 100,right: 10,top: 10),
+              child: RotatedBox(
+                quarterTurns: -1,
+                child: FluidSlider(
+                  thumbDiameter: 35,
+                  value: stokeWidth,
+                  onChanged: (double newValue) {
+                    setState(() {
+                      stokeWidth = newValue;
+                    });
+                  },
+                  min: 0.0,
+                  max: 30.0,
+                ),
+              ),
+            ),
+          );
+  }
 }
 void showToast(String msg, BuildContext context, {int duration, int gravity}) {
   Toast.show(msg, context, duration: duration, gravity: gravity);
 }
+
