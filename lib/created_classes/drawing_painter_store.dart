@@ -1,3 +1,4 @@
-import 'package:drawing_app/home_page/point_drawer.dart';
+
+import 'package:drawing_app/home_page/drawing_painter.dart';
 
 List<DrawingPainter> drawingPainterList = [];

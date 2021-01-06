@@ -5,26 +5,47 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:drawing_app/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:drawing_app/main.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+  Widget myWidget = ScopedModel(
+      model: MyModel(),
+      child: MaterialApp(home: MyHomePage(title: 'DrawingApp',),));
+  testWidgets('Taps Alert Dialog box', (WidgetTester tester) async {
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.pumpWidget(myWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+   final morefinder = find.byTooltip('More');
+   final alertBoxfinder = find.byType(AlertDialog);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+   expect(morefinder,findsOneWidget);
+
+   expect(find.byType(AlertDialog),findsNothing);
+
+   await tester.tap(morefinder);
+
+   await tester.pump();
+
+   expect(alertBoxfinder, findsOneWidget);
+
   });
+  testWidgets('test Line', (tester)async{
+    await tester.runAsync(() async{
+      await tester.pumpWidget(myWidget);
+      Finder lineFinder = find.byKey(Key('Line'));
+      Finder canvasFinder = find.byKey(Key('canvas'));
+      expect(lineFinder,findsOneWidget);
+      expect(canvasFinder,findsOneWidget);
+      await tester.tap(lineFinder);
+      await tester.pump();
+    });
+
+
+  });
+
 }

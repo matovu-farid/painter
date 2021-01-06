@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:drawing_app/created_widgets/option_button.dart';
 import 'package:drawing_app/model.dart';
 import 'package:drawing_app/starting_page/starting_page.dart';
 import 'package:flutter/material.dart';
@@ -56,17 +57,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Color selectedColor = Colors.amberAccent;
+  //Color selectedColor = Colors.amberAccent;
   Color pickerColor = Colors.amberAccent;
 
   File _imageFile;
-  List<Color> colors = [
-    Colors.red,
-    Colors.green,
-    Colors.blue,
-    Colors.amber,
-    Colors.black
-  ];
+
 
   Option optionSelected = Option.HAND;
   Color previousColor ;
@@ -94,9 +89,6 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() => pickerColor = color);
     }
 
-
-
-
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -115,50 +107,60 @@ class _MyHomePageState extends State<MyHomePage> {
 
           ],
         ),
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-
-            children: [
-              buildLineButton(context),
-              buildHandButton(context),
-              buildColorButton(context, changeColor),
-              buildSaveButton(),
-
-
-              FloatingActionButton(
-                onPressed: (){
-                  showDialog(
-                      context: context,
-                    child: AlertDialog(
-                      content: Wrap(
-                        spacing: 2,
-                        children: [
-                          buildRubberButton(context),
-                          buildSquareButton(),
-                          buildCircleButton(context),
-
-                          buildOvalButton(context),
-                          buildTriangleButton(context),
-                          buildPathButton(context),
-                          ],
-                      ),
-                      actions: [
-                        buildDoneButton(context),
-                      ],
-                    )
-
-                  );
-                },
-                tooltip: 'Increment',
-                child: Icon(Icons.add),
-              ),
-            ],
-          ),
-        ), // This trailing comma makes auto-formatting nicer for build methods.
+        floatingActionButton: buildRowOfOptions(context, changeColor), // This trailing comma makes auto-formatting nicer for build methods.
       ),
     );
+  }
+
+  Padding buildRowOfOptions(BuildContext context, void changeColor(Color color)) {
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+
+          children: [
+            buildLineButton(context),
+           buildHandButton(context),
+            buildColorButton(context, changeColor),
+            buildSaveButton(),
+
+
+            buildMoreButton(context),
+          ],
+        ),
+      );
+  }
+
+  FloatingActionButton buildMoreButton(BuildContext context) {
+    return FloatingActionButton(
+      key: Key('More'),
+            onPressed: (){
+              showDialog(
+                  context: context,
+                child: AlertDialog(
+                  key: Key('AlertBox'),
+                  content: Wrap(
+                    spacing: 2,
+                    children: [
+                      buildRubberButton(context),
+                      buildSquareButton(),
+                      buildCircleButton(context),
+
+                      buildOvalButton(context),
+                      buildTriangleButton(context),
+                      buildPathButton(context),
+                      ],
+                  ),
+                  actions: [
+                    buildDoneButton(context),
+                  ],
+                )
+
+              );
+            },
+            tooltip: 'More',
+            child: Icon(Icons.add),
+          );
   }
 
   SaveButton buildSaveButton() => SaveButton(changingOption: changingOption, screenshotController: screenshotController, optionSelected: optionSelected,);
@@ -202,41 +204,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         );
   }
 
-  FloatingActionButton buildCircleButton(BuildContext context) {
-    return FloatingActionButton(
-                          onPressed: () {
-                            changingOption(Option.CIRCLE);
-                            showToast('Circle', context);
+  Widget buildCircleButton(BuildContext context) {
+    return OptionButton(optionSelected:Option.CIRCLE, toastMessage: 'Circle', icon: Icon(FontAwesome.circle_o));
 
-                          },
-                          child: Icon(FontAwesome.circle_o),
-                        );
   }
 
-  FloatingActionButton buildSquareButton() {
-    return FloatingActionButton(
+  Widget buildSquareButton() {
+    return OptionButton(optionSelected: Option.SQUARE, toastMessage: 'square', icon: Icon(FontAwesome.square_o,),);
 
-                          onPressed: ()=>changingOption(Option.SQUARE),
-
-                          tooltip: 'square',
-                          child: Icon(FontAwesome.square_o,),
-
-                        );
   }
 
-  FloatingActionButton buildRubberButton(BuildContext context) {
-    return FloatingActionButton(
-                          onPressed: (){
+  Widget buildRubberButton(BuildContext context) {
+    return OptionButton(optionSelected: Option.RUBBER, toastMessage: 'Eraser', icon: Icon(FontAwesome.eraser,));
 
-                            changingOption(Option.RUBBER);
-                            showToast('Eraser', context);
-
-                            },
-                          child: Icon(FontAwesome.eraser,),
-
-
-                          tooltip: 'Eraser',
-                        );
   }
 
   FloatingActionButton buildColorButton(BuildContext context, void changeColor(Color color)) {
@@ -257,12 +237,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
                     ),
                     actions: <Widget>[
-                      FlatButton(
-                        child: const Text('Got it'),
-                        onPressed: () {
-                          setState(() => selectedColor = pickerColor);
-                          Navigator.of(context).pop();
+                      ScopedModelDescendant<MyModel>(
+                        builder: (context,child,model){
+                          return FlatButton(
+                            child: const Text('Got it'),
+                            onPressed: () {
+                               model.selectedColor = pickerColor;
+                              Navigator.of(context).pop();
+                            },
+                          );
                         },
+
                       ),
                     ],
                   ),
@@ -274,38 +259,22 @@ class _MyHomePageState extends State<MyHomePage> {
             );
   }
 
-  FloatingActionButton buildHandButton(BuildContext context) {
-    return FloatingActionButton(
-              child: Icon(FontAwesome.hand_pointer_o,color: optionSelected==Option.HAND?Colors.green:Colors.white,),
-              onPressed: (){
-                if(optionSelected==Option.RUBBER){
-                  selectedColor = previousColor ??Colors.yellow;
-                }
-                showToast('hand', context);
+ Widget buildHandButton(BuildContext context) {
+    return HandButton(Option.HAND, 'Hand', Icon(FontAwesome.hand_pointer_o));
 
-                changingOption(Option.HAND);},
-              tooltip: 'Increment',
-            );
   }
 
-  FloatingActionButton buildLineButton(BuildContext context) {
-    return FloatingActionButton(
-              onPressed: (){
-                changingOption(Option.PENCIL);
-                showToast('Line', context);
-                },
+  Widget buildLineButton(BuildContext context) {
+    return OptionButton(key: Key('Line'),optionSelected: Option.PENCIL, toastMessage: 'Line', icon: Icon(FontAwesome.pencil,color: optionSelected==Option.PENCIL?Colors.green:Colors.white,));
 
-              tooltip: 'Increment',
-              child: Icon(FontAwesome.pencil,color: optionSelected==Option.PENCIL?Colors.green:Colors.white,),
-            );
   }
 
   Widget buildMyDrawer() {
-    return MyDrawer( selectedColor: selectedColor,
-            pickedColor:pickerColor,strokeWidth:stokeWidth,
-            drawingOption: optionSelected,
-            screenshotController: screenshotController,
-           );
+    return MyDrawer(
+      pickedColor:pickerColor,strokeWidth:stokeWidth,
+
+      screenshotController: screenshotController,
+    );
   }
 
   Widget buildGuides() {

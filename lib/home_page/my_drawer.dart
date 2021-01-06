@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:drawing_app/created_classes/options.dart';
-import 'package:drawing_app/home_page/point_drawer.dart';
+import 'package:drawing_app/home_page/drawing_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:screenshot/screenshot.dart';
@@ -8,12 +8,12 @@ import '../created_classes/drawing_point_class.dart';
 import '../model.dart';
 
 class MyDrawer extends StatefulWidget{
-   Color selectedColor;
+
    Color pickedColor;
    final double strokeWidth;
-   final Option drawingOption;
+
    final ScreenshotController screenshotController;
-   MyDrawer({Key key, this.selectedColor, this.pickedColor, this.strokeWidth, @required this.drawingOption,this.screenshotController,}) : super(key: key);
+   MyDrawer({Key key, this.pickedColor, this.strokeWidth, this.screenshotController,}) : super(key: key);
 
 
   @override
@@ -54,8 +54,10 @@ class _MyDrawerState extends State<MyDrawer> {
 
     return ScopedModelDescendant<MyModel>(
       builder: (BuildContext context, Widget child, MyModel model) {
+         Color selectedColor = model.selectedColor;
+         Option selectedOption = model.optionSelected;
         return GestureDetector(
-
+          key: Key('canvas'),
           child: Screenshot(
             controller: widget.screenshotController,
             child: Scaffold(
@@ -70,42 +72,42 @@ class _MyDrawerState extends State<MyDrawer> {
             RenderBox renderBox = context.findRenderObject();
             print(renderBox.globalToLocal(details.globalPosition));
             setState(() {
-              if(widget.drawingOption == Option.PATH ){
+              if(selectedOption == Option.PATH ){
 
                 pathPoints.add(DrawingPoints(
                     nth: nth,
-                    drawingOption: widget.drawingOption,
+                    drawingOption: selectedOption,
                     points: renderBox.globalToLocal(details.globalPosition),
                     paint: Paint()
                       ..strokeCap = strokeCap
                       ..isAntiAlias = true
-                      ..color = widget.selectedColor.withOpacity(opacity)
+                      ..color = model.selectedColor.withOpacity(opacity)
                       ..strokeWidth = widget.strokeWidth));
-                controlNth(nth,widget.drawingOption);
-              }else if(widget.drawingOption == Option.PENCIL ){
+                controlNth(nth,selectedOption);
+              }else if(selectedOption == Option.PENCIL ){
                 RenderBox renderBox = context.findRenderObject();
                 linePoints.add(DrawingPoints(
                     nth: nth,
-                    drawingOption: widget.drawingOption,
+                    drawingOption: selectedOption,
                     points: renderBox.globalToLocal(details.globalPosition),
                     paint: Paint()
                       ..strokeCap = strokeCap
                       ..isAntiAlias = true
-                      ..color = widget.selectedColor.withOpacity(opacity)
+                      ..color = model.selectedColor.withOpacity(opacity)
                       ..strokeWidth = widget.strokeWidth));
-                controlNth(nth,widget.drawingOption);
-              }else if(widget.drawingOption == Option.TRIANGLE ){
+                controlNth(nth,selectedOption);
+              }else if(selectedOption== Option.TRIANGLE ){
                 RenderBox renderBox = context.findRenderObject();
                 trianglePoints.add(DrawingPoints(
                     nth: nth,
-                    drawingOption: widget.drawingOption,
+                    drawingOption: selectedOption,
                     points: renderBox.globalToLocal(details.globalPosition),
                     paint: Paint()
                       ..strokeCap = strokeCap
                       ..isAntiAlias = true
-                      ..color = widget.selectedColor.withOpacity(opacity)
+                      ..color = selectedColor.withOpacity(opacity)
                       ..strokeWidth = widget.strokeWidth));
-                controlNth(nth,widget.drawingOption);
+                controlNth(nth,selectedOption);
               }
             });
 
@@ -117,12 +119,12 @@ class _MyDrawerState extends State<MyDrawer> {
             print(drawingPoints);
             setState(() {
               points.add(DrawingPoints(
-                  drawingOption: widget.drawingOption,
+                  drawingOption: selectedOption,
                   points: drawingPoints,
                   paint: Paint()
                     ..strokeCap = strokeCap
                     ..isAntiAlias = true
-                    ..color = widget.selectedColor.withOpacity(opacity)
+                    ..color = selectedColor.withOpacity(opacity)
                     ..strokeWidth = widget.strokeWidth));
             });
           },
@@ -131,12 +133,12 @@ class _MyDrawerState extends State<MyDrawer> {
               RenderBox renderBox = context.findRenderObject();
               points.add(DrawingPoints(
                   type: PointType.Start,
-                  drawingOption: widget.drawingOption,
+                  drawingOption: selectedOption,
                   points: renderBox.globalToLocal(details.globalPosition),
                   paint: Paint()
                     ..strokeCap = strokeCap
                     ..isAntiAlias = true
-                    ..color = widget.selectedColor.withOpacity(opacity)
+                    ..color = selectedColor.withOpacity(opacity)
                     ..strokeWidth = widget.strokeWidth));
             });
           },

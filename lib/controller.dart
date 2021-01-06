@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:drawing_app/main.dart';
-import 'file:///C:/Users/Sarah/drawing_app/lib/starting_page/starting_page.dart';
+import 'package:drawing_app/starting_page/starting_page.dart';
 import 'package:flutter/material.dart';
 class ControllerPage extends StatefulWidget {
 
