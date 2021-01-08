@@ -7,20 +7,20 @@ import 'package:screenshot/screenshot.dart';
 import '../created_classes/drawing_point_class.dart';
 import '../model.dart';
 
-class MyDrawer extends StatefulWidget{
+class ShapeDrawer extends StatefulWidget{
 
-   Color pickedColor;
-   final double strokeWidth;
+
+
 
    final ScreenshotController screenshotController;
-   MyDrawer({Key key, this.pickedColor, this.strokeWidth, this.screenshotController,}) : super(key: key);
+   ShapeDrawer({Key key,@required this.screenshotController,}) : super(key: key);
 
 
   @override
-  _MyDrawerState createState() => _MyDrawerState();
+  _ShapeDrawerState createState() => _ShapeDrawerState();
 }
 
-class _MyDrawerState extends State<MyDrawer> {
+class _ShapeDrawerState extends State<ShapeDrawer> {
   List<DrawingPoints> points = [];
   List<DrawingPoints> pathPoints = [];
   List<DrawingPoints> linePoints = [];
@@ -47,6 +47,50 @@ class _MyDrawerState extends State<MyDrawer> {
       else
         this.nth = 1;
     }
+  }
+ void onPanDown(details,MyModel model){
+    model.changeGuides(true);
+    RenderBox renderBox = context.findRenderObject();
+    print(renderBox.globalToLocal(details.globalPosition));
+    setState(() {
+      if(model.optionSelected == Option.PATH ){
+        pathPoints.add(DrawingPoints(
+            nth: nth,
+            drawingOption: model.optionSelected,
+            points: renderBox.globalToLocal(details.globalPosition),
+            paint: Paint()
+              ..strokeCap = strokeCap
+              ..isAntiAlias = true
+              ..color = model.selectedColor.withOpacity(opacity)
+              ..strokeWidth = model.strokeWidth));
+        controlNth(nth,model.optionSelected);
+      }else if(model.optionSelected == Option.PENCIL ){
+        RenderBox renderBox = context.findRenderObject();
+        linePoints.add(DrawingPoints(
+            nth: nth,
+            drawingOption: model.optionSelected,
+            points: renderBox.globalToLocal(details.globalPosition),
+            paint: Paint()
+              ..strokeCap = strokeCap
+              ..isAntiAlias = true
+              ..color = model.selectedColor.withOpacity(opacity)
+              ..strokeWidth = model.strokeWidth));
+        controlNth(nth,model.optionSelected);
+      }else if(model.optionSelected== Option.TRIANGLE ){
+        RenderBox renderBox = context.findRenderObject();
+        trianglePoints.add(DrawingPoints(
+            nth: nth,
+            drawingOption: model.optionSelected,
+            points: renderBox.globalToLocal(details.globalPosition),
+            paint: Paint()
+              ..strokeCap = strokeCap
+              ..isAntiAlias = true
+              ..color = model.selectedColor.withOpacity(opacity)
+              ..strokeWidth = model.strokeWidth));
+        controlNth(nth,model.optionSelected);
+      }
+    });
+
   }
 
   @override
@@ -82,7 +126,7 @@ class _MyDrawerState extends State<MyDrawer> {
                       ..strokeCap = strokeCap
                       ..isAntiAlias = true
                       ..color = model.selectedColor.withOpacity(opacity)
-                      ..strokeWidth = widget.strokeWidth));
+                      ..strokeWidth = model.strokeWidth));
                 controlNth(nth,selectedOption);
               }else if(selectedOption == Option.PENCIL ){
                 RenderBox renderBox = context.findRenderObject();
@@ -94,7 +138,7 @@ class _MyDrawerState extends State<MyDrawer> {
                       ..strokeCap = strokeCap
                       ..isAntiAlias = true
                       ..color = model.selectedColor.withOpacity(opacity)
-                      ..strokeWidth = widget.strokeWidth));
+                      ..strokeWidth = model.strokeWidth));
                 controlNth(nth,selectedOption);
               }else if(selectedOption== Option.TRIANGLE ){
                 RenderBox renderBox = context.findRenderObject();
@@ -106,7 +150,7 @@ class _MyDrawerState extends State<MyDrawer> {
                       ..strokeCap = strokeCap
                       ..isAntiAlias = true
                       ..color = selectedColor.withOpacity(opacity)
-                      ..strokeWidth = widget.strokeWidth));
+                      ..strokeWidth = model.strokeWidth));
                 controlNth(nth,selectedOption);
               }
             });
@@ -125,7 +169,7 @@ class _MyDrawerState extends State<MyDrawer> {
                     ..strokeCap = strokeCap
                     ..isAntiAlias = true
                     ..color = selectedColor.withOpacity(opacity)
-                    ..strokeWidth = widget.strokeWidth));
+                    ..strokeWidth = model.strokeWidth));
             });
           },
           onPanStart: (details) {
@@ -139,7 +183,7 @@ class _MyDrawerState extends State<MyDrawer> {
                     ..strokeCap = strokeCap
                     ..isAntiAlias = true
                     ..color = selectedColor.withOpacity(opacity)
-                    ..strokeWidth = widget.strokeWidth));
+                    ..strokeWidth = model.strokeWidth));
             });
           },
           onPanEnd: (details) {

@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
       optionSelected = option;
     });
   }
-  double stokeWidth = 5;
+
   ScreenshotController screenshotController;
   @override
   void initState() {
@@ -174,34 +174,17 @@ class _MyHomePageState extends State<MyHomePage> {
                       );
   }
 
-  FloatingActionButton buildPathButton(BuildContext context) {
-    return FloatingActionButton(
-                          onPressed: () {
-                            changingOption(Option.PATH);
-                            showToast('Path', context);
-                          },
-                          child: Icon(FontAwesome.circle_o_notch),
-                        );
+  Widget buildPathButton(BuildContext context) {
+    return OptionButton(optionSelected: Option.PATH, toastMessage: 'Path', icon: Icon(FontAwesome.circle_o_notch));
   }
 
-  FloatingActionButton buildTriangleButton(BuildContext context) {
-    return FloatingActionButton(
-                          onPressed: () {
-                            changingOption(Option.TRIANGLE);
-                            showToast('Triangle', context);
-                          },
-                          child: Icon(FontAwesome.exclamation_triangle),
-                        );
+  Widget buildTriangleButton(BuildContext context) {
+    return OptionButton(optionSelected: Option.TRIANGLE, toastMessage: 'Triangle', icon: Icon(FontAwesome.exclamation_triangle));
   }
 
-  FloatingActionButton buildOvalButton(BuildContext context) {
-    return FloatingActionButton(
-                          onPressed: () {
-                            changingOption(Option.RECTANGLE);
-                            showToast('Rectangle', context);
-                          },
-                          child: Icon(FontAwesome.times_rectangle),
-                        );
+  Widget buildOvalButton(BuildContext context) {
+    return OptionButton(optionSelected: Option.OVAL, toastMessage: 'Oval', icon: Icon(FontAwesome.times_rectangle));
+
   }
 
   Widget buildCircleButton(BuildContext context) {
@@ -270,8 +253,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget buildMyDrawer() {
-    return MyDrawer(
-      pickedColor:pickerColor,strokeWidth:stokeWidth,
+    return ShapeDrawer(
+
 
       screenshotController: screenshotController,
     );
@@ -303,16 +286,19 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.only(bottom: 100,right: 10,top: 10),
               child: RotatedBox(
                 quarterTurns: -1,
-                child: FluidSlider(
-                  thumbDiameter: 35,
-                  value: stokeWidth,
-                  onChanged: (double newValue) {
-                    setState(() {
-                      stokeWidth = newValue;
-                    });
-                  },
-                  min: 0.0,
-                  max: 30.0,
+                child: ScopedModelDescendant<MyModel>(
+
+                  builder: (context, child,model) {
+                    return FluidSlider(
+                      thumbDiameter: 35,
+                      value: model.strokeWidth,
+                      onChanged: (double strokeWidth) {
+                        model.changeStrokeWidth(strokeWidth);
+                      },
+                      min: 0.0,
+                      max: 30.0,
+                    );
+                  }
                 ),
               ),
             ),

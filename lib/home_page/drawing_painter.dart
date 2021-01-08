@@ -9,9 +9,6 @@ import 'dart:math';
 
 class DrawingPainter extends CustomPainter {
   final MyModel model;
-
-
-
   DrawingPainter( {this.model, this.pointsList,this.pathPoints,this.linePoints,this.trianglePoints});
   List<DrawingPoints> pointsList;
   List<DrawingPoints> pathPoints;
