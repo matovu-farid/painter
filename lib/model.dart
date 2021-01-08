@@ -8,6 +8,7 @@ class MyModel extends Model{
   double nth = 1;
   Color selectedColor = Colors.amberAccent;
   Color previousColor = Colors.amberAccent;
+
   Option optionSelected = Option.HAND;
   bool guides = false;
   Option previousOption;
