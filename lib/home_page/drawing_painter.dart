@@ -14,17 +14,15 @@ class DrawingPainter extends CustomPainter {
   List<DrawingPoints> pathPoints;
   List<DrawingPoints> linePoints;
   List<DrawingPoints> trianglePoints;
-
-
   List<Offset> offsetPoints = List();
+
   drawFigure(Canvas canvas,Paint paint,Offset point1,Offset point2,{Option option = Option.CIRCLE,Offset controlPoint,MyModel model}){
     double x = point2.dx - point1.dx;
     double y = point2.dy - point1.dy;
     Offset center = Offset(point1.dx + x * 0.5, point1.dy + y * 0.5);
     double radius = 0.5 * sqrt(x * x + y * y);
   if(option == Option.CIRCLE) {
-    canvas.drawCircle(center, radius,
-        paint);
+    canvas.drawCircle(center, radius, paint);
   }else if (option == Option.SQUARE){
     Rect rect = Rect.fromCircle(center: center,radius: radius);
     canvas.drawRect(rect, paint);
@@ -35,23 +33,38 @@ class DrawingPainter extends CustomPainter {
     Rect rect = Rect.fromCenter(center: center,width: x,height: y);
     canvas.drawRect(rect, paint);
   }else if(option == Option.PATH){
+    drawCurve(point1, controlPoint, center, radius, point2, canvas, paint, model);
+  }else if(option == Option.TRIANGLE){
+    drawTriangle(point1, point2, controlPoint, canvas, paint, model);
+  }
+  else if(option == Option.PENCIL){
+    drawLine(canvas, point1, point2, paint, model);
+  }
+
+
+  }
+
+  void drawLine(Canvas canvas, Offset point1, Offset point2, Paint paint, MyModel model) {
+    canvas.drawLine(point1, point2, paint);
+    model.changeGuides(false);
+
+  }
+
+  void drawTriangle(Offset point1, Offset point2, Offset controlPoint, Canvas canvas, Paint paint, MyModel model) {
+    var vertices = Vertices(VertexMode.triangles, [point1,point2,controlPoint]);
+    canvas.drawVertices(vertices, BlendMode.clear, paint);
+    model.changeGuides(false);
+
+  }
+
+  void drawCurve(Offset point1, Offset controlPoint, Offset center, double radius, Offset point2, Canvas canvas, Paint paint, MyModel model) {
     Path path = Path();
     path.moveTo(point1.dx, point1.dy);
     path.quadraticBezierTo(controlPoint.dx??center.dx + radius, controlPoint.dy ??center.dy + radius, point2.dx, point2.dy);
     canvas.drawPath(path, paint);
     path.reset();
     model.changeGuides(false);
-  }else if(option == Option.TRIANGLE){
-    var vertices = Vertices(VertexMode.triangles, [point1,point2,controlPoint]);
-    canvas.drawVertices(vertices, BlendMode.clear, paint);
-    model.changeGuides(false);
-  }
-  else if(option == Option.PENCIL){
-    canvas.drawLine(point1, point2, paint);
-    model.changeGuides(false);
-  }
-
-
+    
   }
 
   DrawingPoints startPoint ;
@@ -77,36 +90,19 @@ class DrawingPainter extends CustomPainter {
          }
          if(model.guides) {
            if (pathPoints != []) {
-             // pathPoints.map((e) => canvas.drawPoints(PointMode.points, [e.points], e.paint..style = PaintingStyle.stroke));
              for (int i = 0; i < pathPoints.length - 1; i++) {
                canvas.drawPoints(
                    PointMode.points, pathPoints.map((e) => e.points).toList(),
                    pathPoints[i].paint
                      ..style = PaintingStyle.stroke
-                 //..strokeWidth=4
                );
              }
            }
            if (trianglePoints != []) {
-             // pathPoints.map((e) => canvas.drawPoints(PointMode.points, [e.points], e.paint..style = PaintingStyle.stroke));
-             for (int i = 0; i < trianglePoints.length - 1; i++) {
-               canvas.drawPoints(
-                   PointMode.points, trianglePoints.map((e) => e.points).toList(),
-                   trianglePoints[i].paint
-                     ..style = PaintingStyle.stroke
-
-                 //..strokeWidth=4
-               );
-             }
+             drawTriangleGuidePoints(canvas);
            }
            if (linePoints != []) {
-             for (int i = 0; i < linePoints.length - 1; i++) {
-               canvas.drawPoints(
-                   PointMode.points, linePoints.map((e) => e.points).toList(),
-                   linePoints[i].paint..style = PaintingStyle.stroke
-                 // ..strokeWidth=4
-               );
-             }
+             drawLineGuidePoints(canvas);
            }
          }
 
@@ -179,6 +175,28 @@ class DrawingPainter extends CustomPainter {
 
       }
 
+  }
+
+  void drawLineGuidePoints(Canvas canvas) {
+     for (int i = 0; i < linePoints.length - 1; i++) {
+      canvas.drawPoints(
+          PointMode.points, linePoints.map((e) => e.points).toList(),
+          linePoints[i].paint..style = PaintingStyle.stroke
+        // ..strokeWidth=4
+      );
+    }
+  }
+
+  void drawTriangleGuidePoints(Canvas canvas) {
+    for (int i = 0; i < trianglePoints.length - 1; i++) {
+      canvas.drawPoints(
+          PointMode.points, trianglePoints.map((e) => e.points).toList(),
+          trianglePoints[i].paint
+            ..style = PaintingStyle.stroke
+
+        //..strokeWidth=4
+      );
+    }
   }
   @override
   bool shouldRepaint(DrawingPainter oldDelegate) => true;

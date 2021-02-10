@@ -91,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Center(child: Text(widget.title)),
         ),
         body: Stack(
-          children: <Widget>[buildMyDrawer(), buildSlider(), buildGuides()],
+          children: <Widget>[buildMyDrawer(), buildSlider(),],
         ),
         floatingActionButton: buildRowOfOptions(context), // This trailing comma makes auto-formatting nicer for build methods.
       ),

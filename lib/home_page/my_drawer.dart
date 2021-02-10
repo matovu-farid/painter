@@ -31,23 +31,9 @@ class _ShapeDrawerState extends State<ShapeDrawer> {
 
   double opacity = 1.0;
   StrokeCap strokeCap = (Platform.isAndroid) ? StrokeCap.butt : StrokeCap.round;
-  int nth = 1;
+  //int nth = 1;
 
-  controlNth(int nth,Option option){
-    if(option==Option.PATH ||option==Option.TRIANGLE) {
-      print(nth);
-      if (nth < 3)
-        this.nth++;
-      else
-        this.nth = 1;
-    }else if (option ==Option.PENCIL){
-      print(nth);
-      if (nth < 2)
-        this.nth++;
-      else
-        this.nth = 1;
-    }
-  }
+
  void onPanDown(details,MyModel model){
     model.changeGuides(true);
     RenderBox renderBox = context.findRenderObject();
@@ -69,7 +55,7 @@ class _ShapeDrawerState extends State<ShapeDrawer> {
 
  void addFirstPointToTraingleContainer(MyModel model, RenderBox renderBox, details) {
    trianglePoints.add(DrawingPoints(
-       nth: nth,
+       nth: model.nth,
        drawingOption: model.optionSelected,
        points: renderBox.globalToLocal(details.globalPosition),
        paint: Paint()
@@ -77,12 +63,13 @@ class _ShapeDrawerState extends State<ShapeDrawer> {
          ..isAntiAlias = true
          ..color = model.selectedColor.withOpacity(opacity)
          ..strokeWidth = model.strokeWidth));
-   controlNth(nth,model.optionSelected);
+   model.controlNth();
+
  }
 
  void addFistPointToLineContainer(MyModel model, RenderBox renderBox, details) {
    linePoints.add(DrawingPoints(
-       nth: nth,
+       nth: model.nth,
        drawingOption: model.optionSelected,
        points: renderBox.globalToLocal(details.globalPosition),
        paint: Paint()
@@ -90,12 +77,12 @@ class _ShapeDrawerState extends State<ShapeDrawer> {
          ..isAntiAlias = true
          ..color = model.selectedColor.withOpacity(opacity)
          ..strokeWidth = model.strokeWidth));
-   controlNth(nth,model.optionSelected);
+   model.controlNth();
  }
 
  void addFirstPointToPathContainer(MyModel model, RenderBox renderBox, details) {
    pathPoints.add(DrawingPoints(
-       nth: nth,
+       nth: model.nth,
        drawingOption: model.optionSelected,
        points: renderBox.globalToLocal(details.globalPosition),
        paint: Paint()
@@ -103,7 +90,7 @@ class _ShapeDrawerState extends State<ShapeDrawer> {
          ..isAntiAlias = true
          ..color = model.selectedColor.withOpacity(opacity)
          ..strokeWidth = model.strokeWidth));
-   controlNth(nth,model.optionSelected);
+   model.controlNth();
  }
 
   @override
@@ -134,20 +121,10 @@ class _ShapeDrawerState extends State<ShapeDrawer> {
           },
           onPanStart: (details) {
 
-              RenderBox renderBox = context.findRenderObject();
-              points.add(DrawingPoints(
-                  type: PointType.Start,
-                  drawingOption: selectedOption,
-                  points: renderBox.globalToLocal(details.globalPosition),
-                  paint: Paint()
-                    ..strokeCap = strokeCap
-                    ..isAntiAlias = true
-                    ..color = selectedColor.withOpacity(opacity)
-                    ..strokeWidth = model.strokeWidth));
+              addStartPointToPointsContainer(context, selectedOption, details, selectedColor, model);
 
           },
           onPanEnd: (details) {
-
               points.last.type=PointType.End;
 
           },
@@ -156,6 +133,19 @@ class _ShapeDrawerState extends State<ShapeDrawer> {
       },
 
     );
+  }
+
+  void addStartPointToPointsContainer(BuildContext context, Option selectedOption, DragStartDetails details, Color selectedColor, MyModel model) {
+    RenderBox renderBox = context.findRenderObject();
+    points.add(DrawingPoints(
+        type: PointType.Start,
+        drawingOption: selectedOption,
+        points: renderBox.globalToLocal(details.globalPosition),
+        paint: Paint()
+          ..strokeCap = strokeCap
+          ..isAntiAlias = true
+          ..color = selectedColor.withOpacity(opacity)
+          ..strokeWidth = model.strokeWidth));
   }
 
   void addTheNextPoints(BuildContext context, DragUpdateDetails details, Option selectedOption, Color selectedColor, MyModel model) {
