@@ -19,42 +19,59 @@ class ColorButton extends StatelessWidget {
     return FloatingActionButton(
       onPressed: () {
         showToast('Pick a color', context, gravity: Toast.BOTTOM);
-        showDialog(
-          context: context,
-          child: AlertDialog(
-            title: const Text('Pick a color!'),
-            content: SingleChildScrollView(
-              child: ScopedModelDescendant<MyModel>(
-                builder: (context, child,model) {
-                  return ColorPicker(
-                    pickerColor: model.previousColor,
-                    onColorChanged: model.changeColor,
-                    showLabel: true,
-                    pickerAreaHeightPercent: 0.8,
-                  );
-                }
-              ),
-            ),
-            actions: <Widget>[
-              ScopedModelDescendant<MyModel>(
-                builder: (context, child, model) {
-                  return FlatButton(
-                    child: const Text('Got it'),
-                    onPressed: () {
-                      model.selectedColor = model.previousColor;
-                      Navigator.of(context).pop();
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
-        );
+        showColorPopUp(context);
       },
       tooltip: 'choose color',
       child: Icon(
         FontAwesome.dashboard,
       ),
+    );
+  }
+
+  Future showColorPopUp(BuildContext context) {
+    return showDialog(
+        context: context,
+        child: AlertDialog(
+          title: const Text('Pick a color!'),
+          content: ScopedModelDescendant<MyModel>(
+            builder: (context, child,model) {
+              return buildColorPicker(model);
+            }
+          ),
+          actions: <Widget>[
+            GotItButton(),
+          ],
+        ),
+      );
+  }
+
+  ColorPicker buildColorPicker(MyModel model) {
+    return ColorPicker(
+                  pickerColor: model.previousColor,
+                  onColorChanged: model.changeColor,
+                  showLabel: true,
+                  pickerAreaHeightPercent: 0.8,
+                );
+  }
+}
+
+class GotItButton extends StatelessWidget {
+  const GotItButton({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ScopedModelDescendant<MyModel>(
+      builder: (context, child, model) {
+        return FlatButton(
+          child: const Text('Got it'),
+          onPressed: () {
+            model.selectedColor = model.previousColor;
+            Navigator.of(context).pop();
+          },
+        );
+      },
     );
   }
 }

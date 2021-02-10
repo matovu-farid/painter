@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:drawing_app/model.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -7,13 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:toast/toast.dart';
 class SaveButton extends StatefulWidget {
-  final Function changingOption;
+  //final Function changingOption;
 
   final ScreenshotController screenshotController;
 
-  final Option optionSelected;
 
-  const SaveButton({Key key,@required this.changingOption,@required this.screenshotController, @required this.optionSelected}) : super(key: key);
+  final MyModel model;
+
+  const SaveButton({Key key,@required this.screenshotController, @required this.model}) : super(key: key);
   @override
   _SaveButtonState createState() => _SaveButtonState();
 }
@@ -29,7 +32,8 @@ class _SaveButtonState extends State<SaveButton> {
     return FloatingActionButton(
 
       onPressed: (){
-        widget.changingOption(Option.SAVE);
+        widget.model.changeOption(Option.SAVE);
+
         _imageFile = null;
         widget.screenshotController
             .capture()
@@ -49,9 +53,14 @@ class _SaveButtonState extends State<SaveButton> {
         });
       },
 
+
       tooltip: 'save',
-      child: Icon(FontAwesome.save,color: widget.optionSelected==Option.SAVE?Colors.green:Colors.white,),
+      child: Icon(FontAwesome.save,color: Colors.white,),
 
     );
   }
+
+
 }
+
+

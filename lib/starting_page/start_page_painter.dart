@@ -11,6 +11,12 @@ class StartPagePainter extends CustomPainter{
     Offset(129.4, 367.6)
     //Offset(),
   ];
+  List<Offset> trianglePoints2 = [
+    Offset(55.9, 293.8),
+    Offset(108.8, 206.8),
+    Offset(167.8, 296.8)
+    //Offset(),
+  ];
   List<Offset> pathPoints = [
     Offset(134.9, 159.3),
     Offset(222.9, 195.3),
@@ -39,8 +45,17 @@ class StartPagePainter extends CustomPainter{
       ..isAntiAlias = true
       ..color = Colors.green
       ..strokeWidth = 5;
-    canvas.drawVertices(Vertices(VertexMode.triangles, trianglePoints), BlendMode.clear, paint);
+    drawTriangles(canvas, paint);
     canvas.drawCircle(center, radius, paint..color=Colors.pink);
+    drawCurve(canvas, paint);
+  }
+
+  void drawTriangles(Canvas canvas, Paint paint) {
+    canvas.drawVertices(Vertices(VertexMode.triangles, trianglePoints), BlendMode.clear, paint);
+    canvas.drawVertices(Vertices(VertexMode.triangles, trianglePoints2), BlendMode.clear, paint..color=Colors.purple);
+  }
+
+  void drawCurve(Canvas canvas, Paint paint) {
     Path path = Path();
     path.moveTo(get('x', 0), get('y', 0));
     path.quadraticBezierTo(get('x', 1), get('y', 1), get('x', 2), get('y', 2));

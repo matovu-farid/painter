@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:drawing_app/dot_slider.dart';
 import 'package:drawing_app/color_button.dart';
 import 'package:drawing_app/created_widgets/option_button.dart';
+import 'package:drawing_app/main_methods.dart';
 import 'package:drawing_app/model.dart';
 import 'package:drawing_app/starting_page/starting_page.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ import 'package:screenshot/screenshot.dart';
 import 'package:toast/toast.dart';
 import 'controller.dart';
 import 'created_classes/options.dart';
+import 'created_widgets/more_button.dart';
 import 'created_widgets/save_button.dart';
 import 'home_page/my_drawer.dart';
 
@@ -55,19 +58,10 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-
-
-  File _imageFile;
+class _MyHomePageState extends State<MyHomePage> with MainMethods{
 
   Option optionSelected = Option.HAND;
-  void changingOption(Option option) {
-    setState(() {
-      optionSelected = option;
-    });
-  }
 
-  ScreenshotController screenshotController;
   @override
   void initState() {
     super.initState();
@@ -81,8 +75,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -91,188 +83,39 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Center(child: Text(widget.title)),
         ),
         body: Stack(
-          children: <Widget>[buildMyDrawer(), buildSlider(),],
+          children: <Widget>[
+            buildMyDrawer(),
+            buildSlider(),
+          ],
         ),
-        floatingActionButton: buildRowOfOptions(context), // This trailing comma makes auto-formatting nicer for build methods.
+        floatingActionButton: buildRowOfOptions(
+            context), // This trailing comma makes auto-formatting nicer for build methods.
       ),
     );
   }
 
   Padding buildRowOfOptions(
-      BuildContext context,) {
+    BuildContext context,
+  ) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          buildLineButton(),
-          buildHandButton(),
-          buildColorButton(),
-          buildSaveButton(),
-          buildMoreButton(context),
-        ],
-      ),
+      padding: const EdgeInsets.only(left: 12, right: 8),
+      child: ScopedModelDescendant<MyModel>(
+          builder: (BuildContext context, child, model) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            buildLineButton(model),
+            buildHandButton(model),
+            buildColorButton(),
+            buildSaveButton(model),
+            buildMoreButton(),
+          ],
+        );
+      }),
     );
   }
 
-  FloatingActionButton buildMoreButton(BuildContext context) {
-    return FloatingActionButton(
-      key: Key('More'),
-      onPressed: () {
-        showDialog(
-            context: context,
-            child: AlertDialog(
-              key: Key('AlertBox'),
-              content: Wrap(
-                spacing: 2,
-                children: [
-                  buildRubberButton(context),
-                  buildSquareButton(),
-                  buildCircleButton(context),
-                  buildOvalButton(context),
-                  buildTriangleButton(context),
-                  buildPathButton(context),
-                ],
-              ),
-              actions: [
-                buildDoneButton(context),
-              ],
-            ));
-      },
-      tooltip: 'More',
-      child: Icon(Icons.add),
-    );
-  }
 
-  SaveButton buildSaveButton() => SaveButton(
-        changingOption: changingOption,
-        screenshotController: screenshotController,
-        optionSelected: optionSelected,
-      );
-
-  FlatButton buildDoneButton(BuildContext context) {
-    return FlatButton(
-      child: const Text('Done'),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-  }
-
-  Widget buildPathButton(BuildContext context) {
-    return OptionButton(
-        optionSelected: Option.PATH,
-        toastMessage: 'Path',
-        icon: Icon(FontAwesome.circle_o_notch));
-  }
-
-  Widget buildTriangleButton(BuildContext context) {
-    return OptionButton(
-        optionSelected: Option.TRIANGLE,
-        toastMessage: 'Triangle',
-        icon: Icon(FontAwesome.exclamation_triangle));
-  }
-
-  Widget buildOvalButton(BuildContext context) {
-    return OptionButton(
-        optionSelected: Option.OVAL,
-        toastMessage: 'Oval',
-        icon: Icon(FontAwesome.times_rectangle));
-  }
-
-  Widget buildCircleButton(BuildContext context) {
-    return OptionButton(
-        optionSelected: Option.CIRCLE,
-        toastMessage: 'Circle',
-        icon: Icon(FontAwesome.circle_o));
-  }
-
-  Widget buildSquareButton() {
-    return OptionButton(
-      optionSelected: Option.SQUARE,
-      toastMessage: 'square',
-      icon: Icon(
-        FontAwesome.square_o,
-      ),
-    );
-  }
-
-  Widget buildRubberButton(BuildContext context) {
-    return OptionButton(
-        optionSelected: Option.RUBBER,
-        toastMessage: 'Eraser',
-        icon: Icon(
-          FontAwesome.eraser,
-        ));
-  }
-
-  Widget buildColorButton() {
-    return ColorButton();
-  }
-
-  Widget buildHandButton() {
-    return HandButton(Option.HAND, 'Hand', Icon(FontAwesome.hand_pointer_o));
-  }
-
-  Widget buildLineButton() {
-    return OptionButton(
-        key: Key('Line'),
-        optionSelected: Option.PENCIL,
-        toastMessage: 'Line',
-        icon: Icon(
-          FontAwesome.pencil,
-          color: optionSelected == Option.PENCIL ? Colors.green : Colors.white,
-        ));
-  }
-
-  Widget buildMyDrawer() {
-    return ShapeDrawer(
-      screenshotController: screenshotController,
-    );
-  }
-
-  Widget buildGuides() {
-    return Align(
-        alignment: Alignment.topLeft,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Text('Guides'),
-              ScopedModelDescendant<MyModel>(
-                builder: (BuildContext context, Widget child, MyModel model) {
-                  return Switch.adaptive(
-                      value: model.guides, onChanged: model.changeGuides);
-                },
-              ),
-            ],
-          ),
-        ));
-  }
-
-  Widget buildSlider() {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 100, right: 10, top: 10),
-        child: RotatedBox(
-          quarterTurns: -1,
-          child:
-              ScopedModelDescendant<MyModel>(builder: (context, child, model) {
-            return FluidSlider(
-              thumbDiameter: 35,
-              value: model.strokeWidth,
-              onChanged: (double strokeWidth) {
-                model.changeStrokeWidth(strokeWidth);
-              },
-              min: 0.0,
-              max: 30.0,
-            );
-          }),
-        ),
-      ),
-    );
-  }
 }
 
 void showToast(String msg, BuildContext context, {int duration, int gravity}) {

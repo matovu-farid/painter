@@ -8,10 +8,11 @@ class MyModel extends Model{
   int nth = 1;
   Color selectedColor = Colors.amberAccent;
   Color previousColor = Colors.amberAccent;
-
+  Color iconColor = Colors.lightGreen;
   Option optionSelected = Option.HAND;
   bool guides = false;
   Option previousOption;
+  final optionList = [Option.HAND,Option.PENCIL,];
   changeGuides(bool guidesGot){
     guides = guidesGot;
     notifyListeners();
@@ -38,6 +39,7 @@ class MyModel extends Model{
   void changeOption(Option option){
     previousOption = optionSelected;
       optionSelected = option;
+      if(option!=Option.SAVE)optionList.add(option);
       notifyListeners();
   }
   void changeStrokeWidth(double strokeWidth){
