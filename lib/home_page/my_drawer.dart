@@ -36,10 +36,8 @@ class _ShapeDrawerState extends State<ShapeDrawer> with ShapeDrawerMixin{
               body: CustomPaint(
                   painter: DrawingPainter(
                       model: model,
-                      pointsList: points,
-                      pathPoints: pathPoints,
-                      linePoints: linePoints,
-                      trianglePoints: trianglePoints),
+
+                  ),
                   size: Size.infinite),
             ),
           ),
@@ -59,7 +57,7 @@ class _ShapeDrawerState extends State<ShapeDrawer> with ShapeDrawerMixin{
                 context, selectedOption, details, selectedColor, model);
           },
           onPanEnd: (details) {
-            points.last.type = PointType.End;
+            model.pointsList.last.type = PointType.End;
           },
         );
       },

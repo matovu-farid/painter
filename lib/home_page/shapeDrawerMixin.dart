@@ -7,10 +7,7 @@ import '../model.dart';
 import 'package:flutter/material.dart';
 
 class ShapeDrawerMixin{
-  List<DrawingPoints> points = [];
-  List<DrawingPoints> pathPoints = [];
-  List<DrawingPoints> linePoints = [];
-  List<DrawingPoints> trianglePoints = [];
+
   File _imageFile;
 
   double opacity = 1.0;
@@ -36,7 +33,7 @@ class ShapeDrawerMixin{
 
   void addFirstPointToTraingleContainer(
       MyModel model, RenderBox renderBox, details) {
-    trianglePoints.add(DrawingPoints(
+    model.triangleList.add(DrawingPoints(
         nth: model.nth,
         drawingOption: model.optionSelected,
         points: renderBox.globalToLocal(details.globalPosition),
@@ -50,7 +47,7 @@ class ShapeDrawerMixin{
 
   void addFistPointToLineContainer(
       MyModel model, RenderBox renderBox, details) {
-    linePoints.add(DrawingPoints(
+    model.lineList.add(DrawingPoints(
         nth: model.nth,
         drawingOption: model.optionSelected,
         points: renderBox.globalToLocal(details.globalPosition),
@@ -64,7 +61,7 @@ class ShapeDrawerMixin{
 
   void addFirstPointToPathContainer(
       MyModel model, RenderBox renderBox, details) {
-    pathPoints.add(DrawingPoints(
+    model.pathList.add(DrawingPoints(
         nth: model.nth,
         drawingOption: model.optionSelected,
         points: renderBox.globalToLocal(details.globalPosition),
@@ -83,7 +80,7 @@ class ShapeDrawerMixin{
       Color selectedColor,
       MyModel model) {
     RenderBox renderBox = context.findRenderObject();
-    points.add(DrawingPoints(
+    model.pointsList.add(DrawingPoints(
         type: PointType.Start,
         drawingOption: selectedOption,
         points: renderBox.globalToLocal(details.globalPosition),
@@ -100,7 +97,7 @@ class ShapeDrawerMixin{
     var drawingPoints = renderBox.globalToLocal(details.globalPosition);
     print(drawingPoints);
 
-      points.add(DrawingPoints(
+      model.pointsList.add(DrawingPoints(
           drawingOption: selectedOption,
           points: drawingPoints,
           paint: Paint()

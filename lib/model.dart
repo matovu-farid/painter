@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+import 'created_classes/drawing_point_class.dart';
 import 'created_classes/options.dart';
 
 class MyModel extends Model{
+  List<DrawingPoints> pointsList = [];
+  List<DrawingPoints> pathList = [];
+  List<DrawingPoints> lineList = [];
+  List<DrawingPoints> triangleList = [];
   double strokeWidth = 5;
   int nth = 1;
   Color selectedColor = Colors.amberAccent;
@@ -13,6 +18,9 @@ class MyModel extends Model{
   bool guides = false;
   Option previousOption;
   final optionList = [Option.HAND,Option.PENCIL,];
+  undo(){
+
+  }
   changeGuides(bool guidesGot){
     guides = guidesGot;
     notifyListeners();

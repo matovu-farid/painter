@@ -12,6 +12,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:toast/toast.dart';
+import 'package:undo/undo.dart';
 import 'controller.dart';
 import 'created_classes/options.dart';
 import 'created_widgets/more_button.dart';
@@ -22,8 +23,9 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget  {
   // This widget is the root of your application.
+
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,7 @@ class MyApp extends StatelessWidget {
           'startPage': (_) => StartingPage(),
           'homePage': (_) => MyHomePage(
                 title: 'Painter',
+
               ),
           'crossFade': (_) => ControllerPage()
         },
@@ -51,8 +54,9 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key key, this.title,this.undo}) : super(key: key);
   final String title;
+  final Function undo;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -81,7 +85,8 @@ class _MyHomePageState extends State<MyHomePage> with MainMethods{
       child: Scaffold(
         appBar: AppBar(
           title: Center(child: Text(widget.title)),
-          actions: [IconButton(icon: Icon(FontAwesome.undo), onPressed: null)],
+          actions: [IconButton(icon: Icon(FontAwesome.undo), onPressed: null)
+          ],
         ),
         body: Stack(
           children: <Widget>[

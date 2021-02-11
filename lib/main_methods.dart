@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:undo/undo.dart';
 
 import 'color_button.dart';
 import 'created_classes/options.dart';
@@ -12,6 +13,7 @@ import 'dot_slider.dart';
 import 'home_page/my_drawer.dart';
 import 'model.dart';
 class MainMethods{
+
   Widget buildMoreButton() {
     return MoreButton();
   }

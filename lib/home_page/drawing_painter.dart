@@ -9,11 +9,11 @@ import 'dart:math';
 
 class DrawingPainter extends CustomPainter {
   final MyModel model;
-  DrawingPainter( {this.model, this.pointsList,this.pathPoints,this.linePoints,this.trianglePoints});
-  List<DrawingPoints> pointsList;
-  List<DrawingPoints> pathPoints;
-  List<DrawingPoints> linePoints;
-  List<DrawingPoints> trianglePoints;
+  DrawingPainter( {this.model,});
+  List<DrawingPoints> get pointsList=>model.pointsList;
+  List<DrawingPoints> get pathList=>model.pathList;
+  List<DrawingPoints> get lineList=>model.lineList;
+  List<DrawingPoints> get triangleList=>model.triangleList;
   List<Offset> offsetPoints = List();
 
   drawFigure(Canvas canvas,Paint paint,Offset point1,Offset point2,{Option option = Option.CIRCLE,Offset controlPoint,MyModel model}){
@@ -89,19 +89,19 @@ class DrawingPainter extends CustomPainter {
 
          }
          if(model.guides) {
-           if (pathPoints != []) {
-             for (int i = 0; i < pathPoints.length - 1; i++) {
+           if (pathList != []) {
+             for (int i = 0; i < pathList.length - 1; i++) {
                canvas.drawPoints(
-                   PointMode.points, pathPoints.map((e) => e.points).toList(),
-                   pathPoints[i].paint
+                   PointMode.points, pathList.map((e) => e.points).toList(),
+                   pathList[i].paint
                      ..style = PaintingStyle.stroke
                );
              }
            }
-           if (trianglePoints != []) {
+           if (triangleList != []) {
              drawTriangleGuidePoints(canvas);
            }
-           if (linePoints != []) {
+           if (lineList != []) {
              drawLineGuidePoints(canvas);
            }
          }
@@ -117,10 +117,10 @@ class DrawingPainter extends CustomPainter {
          }else if(currentPoint.type != PointType.End && nextPoint.type != PointType.End  &&currentPoint.drawingOption == Option.RUBBER){
            canvas.drawLine(currentPoint.points, nextPoint.points, currentPoint.paint..color = Colors.grey[50]);
          }else if(currentPoint.drawingOption == Option.PENCIL){
-           for(int i = 0; i < linePoints.length -1 ;i++){
+           for(int i = 0; i < lineList.length -1 ;i++){
 
-               if(linePoints[i].nth==1){
-                 drawFigure(canvas, linePoints[i].paint..style =PaintingStyle.stroke, linePoints[i].points, linePoints[i + 1].points,option: Option.PENCIL,model: model);}
+               if(lineList[i].nth==1){
+                 drawFigure(canvas, lineList[i].paint..style =PaintingStyle.stroke, lineList[i].points, lineList[i + 1].points,option: Option.PENCIL,model: model);}
 
          }}
 
@@ -128,14 +128,14 @@ class DrawingPainter extends CustomPainter {
           canvas.drawLine(currentPoint.points, nextPoint.points, currentPoint.paint);
         }else if(currentPoint.drawingOption == Option.PATH){
 
-             for(int i = 0; i < pathPoints.length -1 ;i++){
+             for(int i = 0; i < pathList.length -1 ;i++){
                try{
-               if(pathPoints[i].nth==1){
-               drawFigure(canvas, pathPoints[i].paint..style= PaintingStyle.stroke,
-                 pathPoints[i].points,
-                 pathPoints[i + 2].points,
+               if(pathList[i].nth==1){
+               drawFigure(canvas, pathList[i].paint..style= PaintingStyle.stroke,
+                 pathList[i].points,
+                 pathList[i + 2].points,
                  option: Option.PATH,
-                 controlPoint: pathPoints[i+1].points,
+                 controlPoint: pathList[i+1].points,
                  model: model
                );}
                }catch(e){
@@ -146,15 +146,15 @@ class DrawingPainter extends CustomPainter {
 
          }else if(currentPoint.drawingOption == Option.TRIANGLE){
 
-        for(int i = 0; i < trianglePoints.length -1 ;i++){
+        for(int i = 0; i < triangleList.length -1 ;i++){
           try{
-            if(trianglePoints[i].nth==1){
-              drawFigure(canvas, trianglePoints[i].paint..style= PaintingStyle.stroke,
-                  trianglePoints[i].points,
-                  trianglePoints[i + 2].points,
+            if(triangleList[i].nth==1){
+              drawFigure(canvas, triangleList[i].paint..style= PaintingStyle.stroke,
+                  triangleList[i].points,
+                  triangleList[i + 2].points,
                   option: Option.TRIANGLE,
                   model:model,
-                  controlPoint: trianglePoints[i+1].points
+                  controlPoint: triangleList[i+1].points
               );}
           }catch(e){
 
@@ -178,20 +178,20 @@ class DrawingPainter extends CustomPainter {
   }
 
   void drawLineGuidePoints(Canvas canvas) {
-     for (int i = 0; i < linePoints.length - 1; i++) {
+     for (int i = 0; i < lineList.length - 1; i++) {
       canvas.drawPoints(
-          PointMode.points, linePoints.map((e) => e.points).toList(),
-          linePoints[i].paint..style = PaintingStyle.stroke
+          PointMode.points, lineList.map((e) => e.points).toList(),
+          lineList[i].paint..style = PaintingStyle.stroke
         // ..strokeWidth=4
       );
     }
   }
 
   void drawTriangleGuidePoints(Canvas canvas) {
-    for (int i = 0; i < trianglePoints.length - 1; i++) {
+    for (int i = 0; i < triangleList.length - 1; i++) {
       canvas.drawPoints(
-          PointMode.points, trianglePoints.map((e) => e.points).toList(),
-          trianglePoints[i].paint
+          PointMode.points, triangleList.map((e) => e.points).toList(),
+          triangleList[i].paint
             ..style = PaintingStyle.stroke
 
         //..strokeWidth=4
