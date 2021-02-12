@@ -32,7 +32,7 @@ class _SaveButtonState extends State<SaveButton> {
     return FloatingActionButton(
 
       onPressed: (){
-        widget.model.changeOption(Option.SAVE);
+        widget.model.changeOption(Option.save);
 
         _imageFile = null;
         widget.screenshotController

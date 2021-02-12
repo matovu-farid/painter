@@ -36,7 +36,7 @@ class MainMethods{
   }
 
   Widget buildHandButton(MyModel model) {
-    final option = Option.HAND;
+    final option = Option.hand;
     return HandButton(
         option,
         'Hand',
@@ -47,7 +47,7 @@ class MainMethods{
   }
 
   Widget buildLineButton(MyModel model) {
-    final option = Option.PENCIL;
+    final option = Option.line;
     return OptionButton(
         key: Key('Line'),
         optionSelected: option,

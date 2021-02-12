@@ -16,28 +16,28 @@ class DrawingPainter extends CustomPainter {
   List<DrawingPoint> get triangleList=>model.optionMap['triangleList'];
   List<Offset> offsetPoints = List();
 
-  drawFigure(Canvas canvas,Paint paint,Offset point1,Offset point2,{Option option = Option.CIRCLE,Offset controlPoint,MyModel model}){
+  drawFigure(Canvas canvas,Paint paint,Offset point1,Offset point2,{Option option = Option.circle,Offset controlPoint,MyModel model}){
     double x = point2.dx - point1.dx;
     double y = point2.dy - point1.dy;
     Offset center = Offset(point1.dx + x * 0.5, point1.dy + y * 0.5);
     double radius = 0.5 * sqrt(x * x + y * y);
-  if(option == Option.CIRCLE) {
+  if(option == Option.circle) {
     canvas.drawCircle(center, radius, paint);
-  }else if (option == Option.SQUARE){
+  }else if (option == Option.square){
     Rect rect = Rect.fromCircle(center: center,radius: radius);
     canvas.drawRect(rect, paint);
-  }else if (option == Option.OVAL){
+  }else if (option == Option.oval){
     Rect rect = Rect.fromCenter(center: center,width: x,height: y);
     canvas.drawOval(rect, paint);
-  }else if (option == Option.RECTANGLE){
+  }else if (option == Option.rectangle){
     Rect rect = Rect.fromCenter(center: center,width: x,height: y);
     canvas.drawRect(rect, paint);
-  }else if(option == Option.PATH){
+  }else if(option == Option.path){
     drawCurve(point1, controlPoint, center, radius, point2, canvas, paint, model);
-  }else if(option == Option.TRIANGLE){
+  }else if(option == Option.triangle){
     drawTriangle(point1, point2, controlPoint, canvas, paint, model);
   }
-  else if(option == Option.PENCIL){
+  else if(option == Option.line){
     drawLine(canvas, point1, point2, paint, model);
   }
 
@@ -106,27 +106,27 @@ class DrawingPainter extends CustomPainter {
            }
          }
 
-      if(currentPoint.drawingOption == Option.CIRCLE){
+      if(currentPoint.drawingOption == Option.circle){
            drawFigure(canvas, currentPoint.paint, startPoint.points, currentPoint.points);
-         }else if(currentPoint.drawingOption == Option.SQUARE){
-           drawFigure(canvas, currentPoint.paint, startPoint.points, currentPoint.points,option: Option.SQUARE);
-         }else if(currentPoint.drawingOption == Option.OVAL){
-           drawFigure(canvas, currentPoint.paint, startPoint.points, currentPoint.points,option: Option.OVAL);
-         }else if(currentPoint.drawingOption == Option.RECTANGLE){
-           drawFigure(canvas, currentPoint.paint, startPoint.points, currentPoint.points,option: Option.RECTANGLE);
-         }else if(currentPoint.type != PointType.End && nextPoint.type != PointType.End  &&currentPoint.drawingOption == Option.RUBBER){
+         }else if(currentPoint.drawingOption == Option.square){
+           drawFigure(canvas, currentPoint.paint, startPoint.points, currentPoint.points,option: Option.square);
+         }else if(currentPoint.drawingOption == Option.oval){
+           drawFigure(canvas, currentPoint.paint, startPoint.points, currentPoint.points,option: Option.oval);
+         }else if(currentPoint.drawingOption == Option.rectangle){
+           drawFigure(canvas, currentPoint.paint, startPoint.points, currentPoint.points,option: Option.rectangle);
+         }else if(currentPoint.type != PointType.End && nextPoint.type != PointType.End  &&currentPoint.drawingOption == Option.rubber){
            canvas.drawLine(currentPoint.points, nextPoint.points, currentPoint.paint..color = Colors.grey[50]);
-         }else if(currentPoint.drawingOption == Option.PENCIL){
+         }else if(currentPoint.drawingOption == Option.line){
            for(int i = 0; i < lineList.length -1 ;i++){
 
                if(lineList[i].nth==1){
-                 drawFigure(canvas, lineList[i].paint..style =PaintingStyle.stroke, lineList[i].points, lineList[i + 1].points,option: Option.PENCIL,model: model);}
+                 drawFigure(canvas, lineList[i].paint..style =PaintingStyle.stroke, lineList[i].points, lineList[i + 1].points,option: Option.line,model: model);}
 
          }}
 
-        else if (currentPoint.type != PointType.End && nextPoint.type != PointType.End  && currentPoint.drawingOption == Option.HAND) {
+        else if (currentPoint.type != PointType.End && nextPoint.type != PointType.End  && currentPoint.drawingOption == Option.hand) {
           canvas.drawLine(currentPoint.points, nextPoint.points, currentPoint.paint);
-        }else if(currentPoint.drawingOption == Option.PATH){
+        }else if(currentPoint.drawingOption == Option.path){
 
              for(int i = 0; i < pathList.length -1 ;i++){
                try{
@@ -134,7 +134,7 @@ class DrawingPainter extends CustomPainter {
                drawFigure(canvas, pathList[i].paint..style= PaintingStyle.stroke,
                  pathList[i].points,
                  pathList[i + 2].points,
-                 option: Option.PATH,
+                 option: Option.path,
                  controlPoint: pathList[i+1].points,
                  model: model
                );}
@@ -144,7 +144,7 @@ class DrawingPainter extends CustomPainter {
                }
              }
 
-         }else if(currentPoint.drawingOption == Option.TRIANGLE){
+         }else if(currentPoint.drawingOption == Option.triangle){
 
         for(int i = 0; i < triangleList.length -1 ;i++){
           try{
@@ -152,7 +152,7 @@ class DrawingPainter extends CustomPainter {
               drawFigure(canvas, triangleList[i].paint..style= PaintingStyle.stroke,
                   triangleList[i].points,
                   triangleList[i + 2].points,
-                  option: Option.TRIANGLE,
+                  option: Option.triangle,
                   model:model,
                   controlPoint: triangleList[i+1].points
               );}

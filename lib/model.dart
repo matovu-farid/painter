@@ -12,25 +12,28 @@ class MyModel extends Model{
     'lineList':[],
     'triangleList':[]
   };
+  List<AnalyzedPoint> analyzedList = [];
   void addToMap(String listName,DrawingPoint point){
-    analyze(point);
+    analyzedList.add(AnalyzedPoint(listName, point));
     optionMap[listName].add(point);
   }
-  analyze(DrawingPoint point){
 
-  }
-  //Map<String,List<DrawingPoint>> get optionMap=>_optionMap;
   double strokeWidth = 5;
   int nth = 1;
   Color selectedColor = Colors.amberAccent;
   Color previousColor = Colors.amberAccent;
   Color iconColor = Colors.lightGreen;
-  Option optionSelected = Option.HAND;
+  Option optionSelected = Option.hand;
   bool guides = false;
   Option previousOption;
-  final optionList = [Option.HAND,Option.PENCIL,];
+  final optionList = [Option.hand,Option.line,];
   undo(){
+    final last = analyzedList.last;
+    final secondLast = analyzedList[analyzedList.length-2];
 
+    if(last.point.type==Option.line){
+
+    }
   }
   changeGuides(bool guidesGot){
     guides = guidesGot;
@@ -38,13 +41,13 @@ class MyModel extends Model{
   }
   controlNth(){
 
-    if(optionSelected==Option.PATH ||optionSelected==Option.TRIANGLE) {
+    if(optionSelected==Option.path ||optionSelected==Option.triangle) {
       print(nth);
       if (nth < 3)
         nth++;
       else
         nth = 1;
-    }else if (optionSelected==Option.PENCIL){
+    }else if (optionSelected==Option.line){
       print(nth);
       if (nth < 2)
         nth++;
@@ -58,7 +61,7 @@ class MyModel extends Model{
   void changeOption(Option option){
     previousOption = optionSelected;
       optionSelected = option;
-      if(option!=Option.SAVE)optionList.add(option);
+      if(option!=Option.save)optionList.add(option);
       notifyListeners();
   }
   void changeStrokeWidth(double strokeWidth){

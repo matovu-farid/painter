@@ -1,3 +1,3 @@
 enum Option{
-  HAND,PENCIL,CIRCLE,SQUARE,PLUS,RUBBER,OVAL,RECTANGLE,PATH,SAVE,TRIANGLE
+  hand,line,circle,square,plus,rubber,oval,rectangle,path,save,triangle
 }

@@ -90,7 +90,7 @@ class RubberButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OptionButton(
-        optionSelected: Option.RUBBER,
+        optionSelected: Option.rubber,
         toastMessage: 'Eraser',
         icon: Icon(
           FontAwesome.eraser,
@@ -107,7 +107,7 @@ class SquareButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OptionButton(
-      optionSelected: Option.SQUARE,
+      optionSelected: Option.square,
       toastMessage: 'square',
       icon: Icon(
         FontAwesome.square_o,
@@ -124,7 +124,7 @@ class CircleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OptionButton(
-        optionSelected: Option.CIRCLE,
+        optionSelected: Option.circle,
         toastMessage: 'Circle',
         icon: Icon(FontAwesome.circle_o));
   }
@@ -138,7 +138,7 @@ class OvalButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OptionButton(
-        optionSelected: Option.OVAL,
+        optionSelected: Option.oval,
         toastMessage: 'Oval',
         icon: Icon(FontAwesome.times_rectangle));
   }
@@ -152,7 +152,7 @@ class TriangleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OptionButton(
-        optionSelected: Option.TRIANGLE,
+        optionSelected: Option.triangle,
         toastMessage: 'Triangle',
         icon: Icon(FontAwesome.exclamation_triangle));
   }
@@ -166,7 +166,7 @@ class PathButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OptionButton(
-        optionSelected: Option.PATH,
+        optionSelected: Option.path,
         toastMessage: 'Path',
         icon: Icon(FontAwesome.circle_o_notch));
   }

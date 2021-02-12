@@ -64,7 +64,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> with MainMethods{
 
-  Option optionSelected = Option.HAND;
+  Option optionSelected = Option.hand;
 
   @override
   void initState() {

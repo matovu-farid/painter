@@ -34,10 +34,10 @@ class HandButton extends OptionButton{
   HandButton(Option optionSelected,String message,icon,):super(optionSelected: optionSelected,toastMessage: message,icon: icon);
   @override
   onPressed(MyModel model, BuildContext context) {
-    if(optionSelected==Option.RUBBER){
+    if(optionSelected==Option.rubber){
       model.changeColor(model.previousColor ?? Colors.yellow);
     }
     showToast('hand', context);
-    model.changeOption(Option.HAND);}
+    model.changeOption(Option.hand);}
 
   }

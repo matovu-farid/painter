@@ -19,12 +19,12 @@ class ShapeDrawerMixin{
 
     print(renderBox.globalToLocal(details.globalPosition));
 
-      if (model.optionSelected == Option.PATH) {
+      if (model.optionSelected == Option.path) {
         addFirstPointToPathContainer(model, renderBox, details);
-      } else if (model.optionSelected == Option.PENCIL) {
+      } else if (model.optionSelected == Option.line) {
         //RenderBox renderBox = context.findRenderObject();
         addFistPointToLineContainer(model, renderBox, details);
-      } else if (model.optionSelected == Option.TRIANGLE) {
+      } else if (model.optionSelected == Option.triangle) {
         //RenderBox renderBox = context.findRenderObject();
         addFirstPointToTraingleContainer(model, renderBox, details);
       }
