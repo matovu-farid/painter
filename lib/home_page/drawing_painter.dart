@@ -10,10 +10,10 @@ import 'dart:math';
 class DrawingPainter extends CustomPainter {
   final MyModel model;
   DrawingPainter( {this.model,});
-  List<DrawingPoints> get pointsList=>model.pointsList;
-  List<DrawingPoints> get pathList=>model.pathList;
-  List<DrawingPoints> get lineList=>model.lineList;
-  List<DrawingPoints> get triangleList=>model.triangleList;
+  List<DrawingPoints> get pointsList=>model.optionMap['pointList'];
+  List<DrawingPoints> get pathList=>model.optionMap['pathList'];
+  List<DrawingPoints> get lineList=>model.optionMap['lineList'];
+  List<DrawingPoints> get triangleList=>model.optionMap['triangleList'];
   List<Offset> offsetPoints = List();
 
   drawFigure(Canvas canvas,Paint paint,Offset point1,Offset point2,{Option option = Option.CIRCLE,Offset controlPoint,MyModel model}){

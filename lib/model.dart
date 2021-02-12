@@ -5,10 +5,13 @@ import 'created_classes/drawing_point_class.dart';
 import 'created_classes/options.dart';
 
 class MyModel extends Model{
-  List<DrawingPoints> pointsList = [];
-  List<DrawingPoints> pathList = [];
-  List<DrawingPoints> lineList = [];
-  List<DrawingPoints> triangleList = [];
+
+  final Map<String,List<DrawingPoints>> optionMap={
+    'pointList':[],
+  'pathList':[],
+    'lineList':[],
+    'triangleList':[]
+  };
   double strokeWidth = 5;
   int nth = 1;
   Color selectedColor = Colors.amberAccent;

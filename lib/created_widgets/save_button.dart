@@ -38,7 +38,6 @@ class _SaveButtonState extends State<SaveButton> {
         widget.screenshotController
             .capture()
             .then((File image) async {
-          //print("Capture Done");
           setState(() {
             _imageFile = image;
           });

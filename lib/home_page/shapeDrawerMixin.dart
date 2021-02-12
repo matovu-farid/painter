@@ -33,7 +33,7 @@ class ShapeDrawerMixin{
 
   void addFirstPointToTraingleContainer(
       MyModel model, RenderBox renderBox, details) {
-    model.triangleList.add(DrawingPoints(
+    model.optionMap['triangleList'].add(DrawingPoints(
         nth: model.nth,
         drawingOption: model.optionSelected,
         points: renderBox.globalToLocal(details.globalPosition),
@@ -47,7 +47,7 @@ class ShapeDrawerMixin{
 
   void addFistPointToLineContainer(
       MyModel model, RenderBox renderBox, details) {
-    model.lineList.add(DrawingPoints(
+    model.optionMap['lineList'].add(DrawingPoints(
         nth: model.nth,
         drawingOption: model.optionSelected,
         points: renderBox.globalToLocal(details.globalPosition),
@@ -61,7 +61,7 @@ class ShapeDrawerMixin{
 
   void addFirstPointToPathContainer(
       MyModel model, RenderBox renderBox, details) {
-    model.pathList.add(DrawingPoints(
+    model.optionMap['pathList'].add(DrawingPoints(
         nth: model.nth,
         drawingOption: model.optionSelected,
         points: renderBox.globalToLocal(details.globalPosition),
@@ -80,7 +80,7 @@ class ShapeDrawerMixin{
       Color selectedColor,
       MyModel model) {
     RenderBox renderBox = context.findRenderObject();
-    model.pointsList.add(DrawingPoints(
+    model.optionMap['pointList'].add(DrawingPoints(
         type: PointType.Start,
         drawingOption: selectedOption,
         points: renderBox.globalToLocal(details.globalPosition),
@@ -95,9 +95,8 @@ class ShapeDrawerMixin{
       Option selectedOption, Color selectedColor, MyModel model) {
     RenderBox renderBox = context.findRenderObject();
     var drawingPoints = renderBox.globalToLocal(details.globalPosition);
-    print(drawingPoints);
 
-      model.pointsList.add(DrawingPoints(
+      model.optionMap['pointList'].add(DrawingPoints(
           drawingOption: selectedOption,
           points: drawingPoints,
           paint: Paint()

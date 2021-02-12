@@ -57,7 +57,7 @@ class _ShapeDrawerState extends State<ShapeDrawer> with ShapeDrawerMixin{
                 context, selectedOption, details, selectedColor, model);
           },
           onPanEnd: (details) {
-            model.pointsList.last.type = PointType.End;
+            model.optionMap['pointList'].last.type = PointType.End;
           },
         );
       },
