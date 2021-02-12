@@ -4,11 +4,11 @@ import 'options.dart';
 enum PointType{
   Start,Intermediate,End
 }
-class DrawingPoints {
+class DrawingPoint {
   final Option drawingOption;
   final Paint paint;
   final Offset points;
   final int nth;
   PointType type;
-  DrawingPoints({this.points, this.paint,this.drawingOption,this.type =PointType.Intermediate,this.nth});
+  DrawingPoint({this.points, this.paint,this.drawingOption,this.type =PointType.Intermediate,this.nth});
 }

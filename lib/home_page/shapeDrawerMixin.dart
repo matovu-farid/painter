@@ -33,7 +33,7 @@ class ShapeDrawerMixin{
 
   void addFirstPointToTraingleContainer(
       MyModel model, RenderBox renderBox, details) {
-    model.optionMap['triangleList'].add(DrawingPoints(
+    final point = DrawingPoint(
         nth: model.nth,
         drawingOption: model.optionSelected,
         points: renderBox.globalToLocal(details.globalPosition),
@@ -41,13 +41,14 @@ class ShapeDrawerMixin{
           ..strokeCap = strokeCap
           ..isAntiAlias = true
           ..color = model.selectedColor.withOpacity(opacity)
-          ..strokeWidth = model.strokeWidth));
+          ..strokeWidth = model.strokeWidth);
+    model.addToMap('triangleList', point);
     model.controlNth();
   }
 
   void addFistPointToLineContainer(
       MyModel model, RenderBox renderBox, details) {
-    model.optionMap['lineList'].add(DrawingPoints(
+    final point = DrawingPoint(
         nth: model.nth,
         drawingOption: model.optionSelected,
         points: renderBox.globalToLocal(details.globalPosition),
@@ -55,13 +56,14 @@ class ShapeDrawerMixin{
           ..strokeCap = strokeCap
           ..isAntiAlias = true
           ..color = model.selectedColor.withOpacity(opacity)
-          ..strokeWidth = model.strokeWidth));
+          ..strokeWidth = model.strokeWidth);
+    model.addToMap('lineList', point);
     model.controlNth();
   }
 
   void addFirstPointToPathContainer(
       MyModel model, RenderBox renderBox, details) {
-    model.optionMap['pathList'].add(DrawingPoints(
+    final point = DrawingPoint(
         nth: model.nth,
         drawingOption: model.optionSelected,
         points: renderBox.globalToLocal(details.globalPosition),
@@ -69,7 +71,8 @@ class ShapeDrawerMixin{
           ..strokeCap = strokeCap
           ..isAntiAlias = true
           ..color = model.selectedColor.withOpacity(opacity)
-          ..strokeWidth = model.strokeWidth));
+          ..strokeWidth = model.strokeWidth);
+    model.addToMap('pathList', point);
     model.controlNth();
   }
 
@@ -80,7 +83,7 @@ class ShapeDrawerMixin{
       Color selectedColor,
       MyModel model) {
     RenderBox renderBox = context.findRenderObject();
-    model.optionMap['pointList'].add(DrawingPoints(
+    final point = DrawingPoint(
         type: PointType.Start,
         drawingOption: selectedOption,
         points: renderBox.globalToLocal(details.globalPosition),
@@ -88,7 +91,8 @@ class ShapeDrawerMixin{
           ..strokeCap = strokeCap
           ..isAntiAlias = true
           ..color = selectedColor.withOpacity(opacity)
-          ..strokeWidth = model.strokeWidth));
+          ..strokeWidth = model.strokeWidth);
+    model.addToMap('pointList', point);
   }
 
   void addTheNextPoints(BuildContext context, DragUpdateDetails details,
@@ -96,14 +100,15 @@ class ShapeDrawerMixin{
     RenderBox renderBox = context.findRenderObject();
     var drawingPoints = renderBox.globalToLocal(details.globalPosition);
 
-      model.optionMap['pointList'].add(DrawingPoints(
+      final point = DrawingPoint(
           drawingOption: selectedOption,
           points: drawingPoints,
           paint: Paint()
             ..strokeCap = strokeCap
             ..isAntiAlias = true
             ..color = selectedColor.withOpacity(opacity)
-            ..strokeWidth = model.strokeWidth));
+            ..strokeWidth = model.strokeWidth);
+      model.addToMap('pointList', point);
 
   }
 

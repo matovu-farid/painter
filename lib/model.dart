@@ -6,12 +6,20 @@ import 'created_classes/options.dart';
 
 class MyModel extends Model{
 
-  final Map<String,List<DrawingPoints>> optionMap={
+  final Map<String,List<DrawingPoint>> optionMap={
     'pointList':[],
   'pathList':[],
     'lineList':[],
     'triangleList':[]
   };
+  void addToMap(String listName,DrawingPoint point){
+    analyze(point);
+    optionMap[listName].add(point);
+  }
+  analyze(DrawingPoint point){
+
+  }
+  //Map<String,List<DrawingPoint>> get optionMap=>_optionMap;
   double strokeWidth = 5;
   int nth = 1;
   Color selectedColor = Colors.amberAccent;
@@ -62,4 +70,10 @@ class MyModel extends Model{
     selectedColor = color;
     notifyListeners();
   }
+}
+class  AnalyzedPoint{
+  final String listName;
+  final DrawingPoint point;
+
+  AnalyzedPoint(this.listName, this.point);
 }
