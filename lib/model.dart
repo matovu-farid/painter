@@ -1,23 +1,69 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-
 import 'created_classes/drawing_point_class.dart';
 import 'created_classes/options.dart';
 
 class MyModel extends Model{
 
-  final Map<String,List<DrawingPoint>> optionMap={
+   Map<String,List<DrawingPoint>> optionMap={
     'pointList':[],
   'pathList':[],
     'lineList':[],
     'triangleList':[]
   };
-  List<AnalyzedPoint> analyzedList = [];
-  void addToMap(String listName,DrawingPoint point){
-    analyzedList.add(AnalyzedPoint(listName, point));
-    optionMap[listName].add(point);
-  }
+   clear(){
+     optionMap={
+       'pointList':[],
+       'pathList':[],
+       'lineList':[],
+       'triangleList':[]
+     };
+   }
+  //List<AnalyzedPoint> analyzedList = [];
 
+   // StreamController<Map<String,List<DrawingPoint>>>  controller = StreamController.broadcast();
+   //
+   // addToSink(){
+   //
+   //   controller.sink.add(optionMap);
+   //  // controller.sink.close();
+   // }
+   // Stream<Map<String,List<DrawingPoint>>> get stream=>controller.stream;
+   // saveStream(){
+   //   addToSink();
+   //   stream.listen((map) {
+   //     //print(map);
+   //     listOfMaps.add(map);});
+   //
+   //   index++;
+   //   print(index);
+   //
+   // }
+  void addToMap(String listName,DrawingPoint point){
+    // if(optionSelected!=Option.hand && point.drawingOption==Option.hand){
+    //   return;
+    // }
+    //analyzedList.add(AnalyzedPoint(listName, point));
+    optionMap[listName].add(point);
+    //notifyListeners();
+  }
+  List<Map<String,List<DrawingPoint>>> listOfMaps = [];
+  static int index = 0;
+  // save(){
+  //
+  //   //listOfMaps[index]=optionMap;
+  //   listOfMaps.add(optionMap);
+  //   index++;
+  //   print(listOfMaps);
+  // }
+  void undo(){
+    index--;
+    index = index<=0? 0:index;
+    optionMap= listOfMaps[index];
+
+  }
   double strokeWidth = 5;
   int nth = 1;
   Color selectedColor = Colors.amberAccent;
@@ -27,14 +73,7 @@ class MyModel extends Model{
   bool guides = false;
   Option previousOption;
   final optionList = [Option.hand,Option.line,];
-  undo(){
-    final last = analyzedList.last;
-    final secondLast = analyzedList[analyzedList.length-2];
 
-    if(last.point.type==Option.line){
-
-    }
-  }
   changeGuides(bool guidesGot){
     guides = guidesGot;
     notifyListeners();
@@ -42,13 +81,13 @@ class MyModel extends Model{
   controlNth(){
 
     if(optionSelected==Option.path ||optionSelected==Option.triangle) {
-      print(nth);
+      //print(nth);
       if (nth < 3)
         nth++;
       else
         nth = 1;
     }else if (optionSelected==Option.line){
-      print(nth);
+      //print(nth);
       if (nth < 2)
         nth++;
       else

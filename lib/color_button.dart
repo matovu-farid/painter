@@ -8,6 +8,7 @@ import 'package:toast/toast.dart';
 import 'model.dart';
 
 class ColorButton extends StatelessWidget {
+
   const ColorButton({
     Key key,
 
@@ -17,13 +18,14 @@ class ColorButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
+      backgroundColor: Colors.amber,
       onPressed: () {
         showToast('Pick a color', context, gravity: Toast.BOTTOM);
         showColorPopUp(context);
       },
       tooltip: 'choose color',
       child: Icon(
-        FontAwesome.dashboard,
+        FontAwesome.forumbee
       ),
     );
   }

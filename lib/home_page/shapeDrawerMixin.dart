@@ -17,7 +17,6 @@ class ShapeDrawerMixin{
   void onPanDown(details, MyModel model,RenderBox renderBox) {
     model.changeGuides(true);
 
-    print(renderBox.globalToLocal(details.globalPosition));
 
       if (model.optionSelected == Option.path) {
         addFirstPointToPathContainer(model, renderBox, details);
@@ -84,6 +83,7 @@ class ShapeDrawerMixin{
       MyModel model) {
     RenderBox renderBox = context.findRenderObject();
     final point = DrawingPoint(
+      //nth: model.nth,
         type: PointType.Start,
         drawingOption: selectedOption,
         points: renderBox.globalToLocal(details.globalPosition),
@@ -101,6 +101,7 @@ class ShapeDrawerMixin{
     var drawingPoints = renderBox.globalToLocal(details.globalPosition);
 
       final point = DrawingPoint(
+       // nth: model.nth,
           drawingOption: selectedOption,
           points: drawingPoints,
           paint: Paint()

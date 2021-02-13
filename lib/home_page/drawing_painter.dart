@@ -164,18 +164,14 @@ class DrawingPainter extends CustomPainter {
 
       }
 
-        // else if (currentPoint.type != PointType.End  && nextPoint.type == PointType.End  && currentPoint.drawingOption == Option.HAND) {
-        //   offsetPoints.clear();
-        //   offsetPoints.add(currentPoint.points);
-        //   offsetPoints.add(Offset(
-        //       currentPoint.points.dx + 0.1, currentPoint.points.dy + 0.1));
-        //   canvas.drawPoints(
-        //       PointMode.points, offsetPoints, currentPoint.paint);
-        // }
 
       }
+      canvas.save();
+      canvas.restore();
+
 
   }
+
 
   void drawLineGuidePoints(Canvas canvas) {
      for (int i = 0; i < lineList.length - 1; i++) {
@@ -199,5 +195,5 @@ class DrawingPainter extends CustomPainter {
     }
   }
   @override
-  bool shouldRepaint(DrawingPainter oldDelegate) => true;
+  bool shouldRepaint(DrawingPainter oldDelegate) =>true;
 }

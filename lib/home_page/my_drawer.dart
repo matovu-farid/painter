@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:drawing_app/created_classes/options.dart';
 import 'package:drawing_app/home_page/drawing_painter.dart';
@@ -24,10 +25,12 @@ class _ShapeDrawerState extends State<ShapeDrawer> with ShapeDrawerMixin{
 
   @override
   Widget build(BuildContext context) {
+
     return ScopedModelDescendant<MyModel>(
       builder: (BuildContext context, Widget child, MyModel model) {
         Color selectedColor = model.selectedColor;
         Option selectedOption = model.optionSelected;
+        //model.saveStream();
         return GestureDetector(
           key: Key('canvas'),
           child: Screenshot(
@@ -58,6 +61,7 @@ class _ShapeDrawerState extends State<ShapeDrawer> with ShapeDrawerMixin{
           },
           onPanEnd: (details) {
             model.optionMap['pointList'].last.type = PointType.End;
+            
           },
         );
       },

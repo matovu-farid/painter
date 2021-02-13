@@ -41,7 +41,7 @@ class MainMethods{
         option,
         'Hand',
         Icon(
-          FontAwesome.hand_pointer_o,
+          FontAwesome.google_wallet,
           color: color(model, option),
         ));
   }

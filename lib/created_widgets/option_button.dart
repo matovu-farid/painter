@@ -8,7 +8,7 @@ import '../main.dart';
 class OptionButton extends StatelessWidget {
   final Option optionSelected;
   final String toastMessage;
-  final Icon icon;
+  final Widget icon;
 
   const OptionButton({Key key,@required this.optionSelected,@required this.toastMessage,@required this.icon,}) : super(key: key);
   onPressed(MyModel model,BuildContext context){

@@ -85,7 +85,14 @@ class _MyHomePageState extends State<MyHomePage> with MainMethods{
       child: Scaffold(
         appBar: AppBar(
           title: Center(child: Text(widget.title)),
-          actions: [IconButton(icon: Icon(FontAwesome.undo), onPressed: null)
+          actions: [ScopedModelDescendant<MyModel>(
+            builder: (context, snapshot,model) {
+
+              return IconButton(icon: Icon(FontAwesome.refresh),
+                  onPressed: model.clear
+              );
+            }
+          )
           ],
         ),
         body: Stack(

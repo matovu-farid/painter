@@ -109,8 +109,8 @@ class SquareButton extends StatelessWidget {
     return OptionButton(
       optionSelected: Option.square,
       toastMessage: 'square',
-      icon: Icon(
-        FontAwesome.square_o,
+      icon: ImageIcon(
+        AssetImage('assets/project_icons/Rectangle_svg.png')
       ),
     );
   }
@@ -126,7 +126,7 @@ class CircleButton extends StatelessWidget {
     return OptionButton(
         optionSelected: Option.circle,
         toastMessage: 'Circle',
-        icon: Icon(FontAwesome.circle_o));
+        icon: Icon(FontAwesome.circle));
   }
 }
 
@@ -140,7 +140,10 @@ class OvalButton extends StatelessWidget {
     return OptionButton(
         optionSelected: Option.oval,
         toastMessage: 'Oval',
-        icon: Icon(FontAwesome.times_rectangle));
+        icon: ImageIcon(
+          AssetImage('assets/project_icons/oval.png')
+        )
+    );
   }
 }
 
@@ -154,7 +157,8 @@ class TriangleButton extends StatelessWidget {
     return OptionButton(
         optionSelected: Option.triangle,
         toastMessage: 'Triangle',
-        icon: Icon(FontAwesome.exclamation_triangle));
+        icon: ImageIcon(AssetImage('assets/project_icons/triangle.png'))
+    );
   }
 }
 
@@ -168,6 +172,7 @@ class PathButton extends StatelessWidget {
     return OptionButton(
         optionSelected: Option.path,
         toastMessage: 'Path',
-        icon: Icon(FontAwesome.circle_o_notch));
+        icon: Icon(FontAwesome.stumbleupon_circle,size: 55,)
+    );
   }
 }
