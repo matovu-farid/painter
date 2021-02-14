@@ -23,9 +23,8 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget  {
+class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +35,6 @@ class MyApp extends StatelessWidget  {
           'startPage': (_) => StartingPage(),
           'homePage': (_) => MyHomePage(
                 title: 'Painter',
-
               ),
           'crossFade': (_) => ControllerPage()
         },
@@ -54,7 +52,7 @@ class MyApp extends StatelessWidget  {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title,this.undo}) : super(key: key);
+  MyHomePage({Key key, this.title, this.undo}) : super(key: key);
   final String title;
   final Function undo;
 
@@ -62,8 +60,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with MainMethods{
-
+class _MyHomePageState extends State<MyHomePage> with MainMethods {
   Option optionSelected = Option.hand;
 
   @override
@@ -85,14 +82,11 @@ class _MyHomePageState extends State<MyHomePage> with MainMethods{
       child: Scaffold(
         appBar: AppBar(
           title: Center(child: Text(widget.title)),
-          actions: [ScopedModelDescendant<MyModel>(
-            builder: (context, snapshot,model) {
-
-              return IconButton(icon: Icon(FontAwesome.refresh),
-                  onPressed: model.clear
-              );
-            }
-          )
+          actions: [
+            ScopedModelDescendant<MyModel>(builder: (context, snapshot, model) {
+              return IconButton(
+                  icon: Icon(FontAwesome.refresh), onPressed: model.clear);
+            })
           ],
         ),
         body: Stack(
@@ -114,10 +108,8 @@ class _MyHomePageState extends State<MyHomePage> with MainMethods{
       padding: const EdgeInsets.only(left: 12, right: 8),
       child: ScopedModelDescendant<MyModel>(
           builder: (BuildContext context, child, model) {
-        return LayoutBuilder(
-
-          builder: (context, constraints) {
-            if(constraints.maxWidth<1000)
+        return LayoutBuilder(builder: (context, constraints) {
+          if (constraints.maxWidth < 1000)
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -125,41 +117,39 @@ class _MyHomePageState extends State<MyHomePage> with MainMethods{
                 buildHandButton(model),
                 buildColorButton(),
                 buildSaveButton(model),
-                buildMoreButton(),],
+                buildMoreButton(),
+              ],
             );
-            else return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+          else
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: buildLineButton(model),
                 ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: buildHandButton(model),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: buildColorButton(),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: buildSaveButton(model),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: buildMoreButton(),
-            ),
-
-            ],);
-
-          }
-        );
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: buildHandButton(model),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: buildColorButton(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: buildSaveButton(model),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: buildMoreButton(),
+                ),
+              ],
+            );
+        });
       }),
     );
   }
-
-
 }
 
 void showToast(String msg, BuildContext context, {int duration, int gravity}) {
