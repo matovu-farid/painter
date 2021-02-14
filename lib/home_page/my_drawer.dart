@@ -31,38 +31,50 @@ class _ShapeDrawerState extends State<ShapeDrawer> with ShapeDrawerMixin{
         Color selectedColor = model.selectedColor;
         Option selectedOption = model.optionSelected;
         //model.saveStream();
-        return GestureDetector(
-          key: Key('canvas'),
-          child: Screenshot(
-            controller: widget.screenshotController,
-            child: Scaffold(
-              body: CustomPaint(
-                  painter: DrawingPainter(
-                      model: model,
+        return Stack(
+          children: [
+            GestureDetector(
+              key: Key('canvas'),
+              child: Screenshot(
+                controller: widget.screenshotController,
+                child: Scaffold(
+                  body: CustomPaint(
+                      painter: DrawingPainter(
+                          model: model,
+
+                      ),
+                      size: Size.infinite),
+                ),
+              ),
+              onPanDown: (details) {
+                RenderBox renderBox = context.findRenderObject();
+                onPanDown(details, model,renderBox);
+              },
+              onPanUpdate: (details) {
+                setState(() {
+                  addTheNextPoints(
+                      context, details, selectedOption, selectedColor, model);
+                });
+
+              },
+              onPanStart: (details) {
+                addStartPointToPointsContainer(
+                    context, selectedOption, details, selectedColor, model);
+              },
+              onPanEnd: (details) {
+                model.optionMap['pointList'].last.type = PointType.End;
+
+              },
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+                child: Text(model.message,
+                  style: TextStyle(
+                    fontSize: 20,
 
                   ),
-                  size: Size.infinite),
-            ),
-          ),
-          onPanDown: (details) {
-            RenderBox renderBox = context.findRenderObject();
-            onPanDown(details, model,renderBox);
-          },
-          onPanUpdate: (details) {
-            setState(() {
-              addTheNextPoints(
-                  context, details, selectedOption, selectedColor, model);
-            });
-
-          },
-          onPanStart: (details) {
-            addStartPointToPointsContainer(
-                context, selectedOption, details, selectedColor, model);
-          },
-          onPanEnd: (details) {
-            model.optionMap['pointList'].last.type = PointType.End;
-            
-          },
+                ))
+          ],
         );
       },
     );

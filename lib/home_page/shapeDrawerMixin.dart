@@ -19,7 +19,7 @@ class ShapeDrawerMixin{
 
 
       if (model.optionSelected == Option.path) {
-        addFirstPointToPathContainer(model, renderBox, details);
+        addPointToPathContainer(model, renderBox, details);
       } else if (model.optionSelected == Option.line) {
         //RenderBox renderBox = context.findRenderObject();
         addFistPointToLineContainer(model, renderBox, details);
@@ -43,6 +43,9 @@ class ShapeDrawerMixin{
           ..strokeWidth = model.strokeWidth);
     model.addToMap('triangleList', point);
     model.controlNth();
+    if(point.nth==2)model.changeMessage('Tap Point 3');
+    else if(point.nth==3)model.changeMessage('Tap Point 1');
+    else model.changeMessage('Tap Point 2');
   }
 
   void addFistPointToLineContainer(
@@ -58,9 +61,12 @@ class ShapeDrawerMixin{
           ..strokeWidth = model.strokeWidth);
     model.addToMap('lineList', point);
     model.controlNth();
+    if(point.nth<2) model.changeMessage('Tap Point 2');
+    else model.changeMessage('Tap Point 1');
+
   }
 
-  void addFirstPointToPathContainer(
+  void addPointToPathContainer(
       MyModel model, RenderBox renderBox, details) {
     final point = DrawingPoint(
         nth: model.nth,
@@ -73,6 +79,9 @@ class ShapeDrawerMixin{
           ..strokeWidth = model.strokeWidth);
     model.addToMap('pathList', point);
     model.controlNth();
+    if(point.nth==2)model.changeMessage('Tap Point 3');
+    else if(point.nth==3)model.changeMessage('Tap Point 1');
+    else model.changeMessage('Tap Point 2');
   }
 
   void addStartPointToPointsContainer(
@@ -93,6 +102,7 @@ class ShapeDrawerMixin{
           ..color = selectedColor.withOpacity(opacity)
           ..strokeWidth = model.strokeWidth);
     model.addToMap('pointList', point);
+    if(point.drawingOption==Option.hand)model.changeMessage('Shade');
   }
 
   void addTheNextPoints(BuildContext context, DragUpdateDetails details,

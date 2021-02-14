@@ -1,21 +1,23 @@
 import 'package:drawing_app/created_classes/options.dart';
+import 'package:drawing_app/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'option_button.dart';
 class MoreButton extends StatelessWidget{
-  Widget buildPathButton(BuildContext context) {
-    return PathButton();
+  Widget buildPathButton(MyModel model) {
+    return PathButton(model: model,);
   }
 
-  Widget buildTriangleButton(BuildContext context) {
-    return TriangleButton();
+  Widget buildTriangleButton(MyModel model) {
+    return TriangleButton(model: model,);
   }
 
-  Widget buildOvalButton(BuildContext context) {
+  Widget buildOvalButton() {
     return OvalButton();
   }
 
-  Widget buildCircleButton(BuildContext context) {
+  Widget buildCircleButton() {
     return CircleButton();
   }
 
@@ -23,9 +25,9 @@ class MoreButton extends StatelessWidget{
     return SquareButton();
   }
 
-  Widget buildRubberButton() {
+  Widget buildRubberButton(MyModel model) {
     
-    return RubberButton();
+    return RubberButton(model:model);
   }
   Widget buildDoneButton(BuildContext context) {
     return DoneButton();
@@ -38,22 +40,27 @@ class MoreButton extends StatelessWidget{
       onPressed: () {
         showDialog(
             context: context,
-            child: AlertDialog(
-              key: Key('AlertBox'),
-              content: Wrap(
-                spacing: 2,
-                children: [
-                  buildRubberButton(),
-                  buildSquareButton(),
-                  buildCircleButton(context),
-                  buildOvalButton(context),
-                  buildTriangleButton(context),
-                  buildPathButton(context),
-                ],
-              ),
-              actions: [
-                buildDoneButton(context),
-              ],
+            child: ScopedModelDescendant<MyModel>(
+
+              builder: (context, child,model) {
+                return AlertDialog(
+                  key: Key('AlertBox'),
+                  content: Wrap(
+                    spacing: 2,
+                    children: [
+                      buildRubberButton(model),
+                      buildSquareButton(),
+                      buildCircleButton(),
+                      buildOvalButton(),
+                      buildTriangleButton(model),
+                      buildPathButton(model),
+                    ],
+                  ),
+                  actions: [
+                    buildDoneButton(context),
+                  ],
+                );
+              }
             ));
       },
       tooltip: 'More',
@@ -80,8 +87,10 @@ class DoneButton extends StatelessWidget {
 }
 
 class RubberButton extends StatelessWidget {
-  const RubberButton({
+  final MyModel model;
+ RubberButton({
     Key key,
+   this.model
 
   }) : super(key: key);
 
@@ -90,6 +99,9 @@ class RubberButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OptionButton(
+      onPressed: (){
+        model.changeMessage('Rub');
+      },
         optionSelected: Option.rubber,
         toastMessage: 'Eraser',
         icon: Icon(
@@ -148,13 +160,18 @@ class OvalButton extends StatelessWidget {
 }
 
 class TriangleButton extends StatelessWidget {
+  final MyModel model;
   const TriangleButton({
     Key key,
+    this.model,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return OptionButton(
+      onPressed: (){
+        model.changeMessage('Tap Point 1');
+      },
         optionSelected: Option.triangle,
         toastMessage: 'Triangle',
         icon: ImageIcon(AssetImage('assets/project_icons/triangle.png'))
@@ -163,13 +180,18 @@ class TriangleButton extends StatelessWidget {
 }
 
 class PathButton extends StatelessWidget {
+  final MyModel model;
   const PathButton({
+    @required this.model,
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return OptionButton(
+      onPressed: (){
+        model.changeMessage('Tap Point 1');
+      },
         optionSelected: Option.path,
         toastMessage: 'Path',
         icon: Icon(FontAwesome.stumbleupon_circle,size: 55,)

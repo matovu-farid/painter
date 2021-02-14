@@ -38,17 +38,23 @@ class MainMethods{
   Widget buildHandButton(MyModel model) {
     final option = Option.hand;
     return HandButton(
+
         option,
         'Hand',
         Icon(
           FontAwesome.google_wallet,
           color: color(model, option),
-        ));
+        ),
+      model
+    );
   }
 
   Widget buildLineButton(MyModel model) {
     final option = Option.line;
     return OptionButton(
+      onPressed: (){
+        model.changeMessage('Tap Point 1');
+      },
         key: Key('Line'),
         optionSelected: option,
         toastMessage: 'Line',

@@ -6,6 +6,7 @@ import 'created_classes/drawing_point_class.dart';
 import 'created_classes/options.dart';
 
 class MyModel extends Model{
+  var message = '';
 
    Map<String,List<DrawingPoint>> optionMap={
     'pointList':[],
@@ -20,6 +21,10 @@ class MyModel extends Model{
        'lineList':[],
        'triangleList':[]
      };
+   }
+   changeMessage(String message){
+     this.message = message;
+     notifyListeners();
    }
   //List<AnalyzedPoint> analyzedList = [];
 

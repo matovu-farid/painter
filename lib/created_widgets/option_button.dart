@@ -9,9 +9,10 @@ class OptionButton extends StatelessWidget {
   final Option optionSelected;
   final String toastMessage;
   final Widget icon;
+  final Function onPressed;
 
-  const OptionButton({Key key,@required this.optionSelected,@required this.toastMessage,@required this.icon,}) : super(key: key);
-  onPressed(MyModel model,BuildContext context){
+  const OptionButton({Key key, this.onPressed,@required this.optionSelected,@required this.toastMessage,@required this.icon,}) : super(key: key);
+  onOptionButtonPressed(MyModel model,BuildContext context){
     model.changeOption(optionSelected);
     showToast(toastMessage, context);
   }
@@ -21,7 +22,13 @@ class OptionButton extends StatelessWidget {
       builder: (BuildContext context,Widget child,MyModel model){
         return FloatingActionButton(
 
-          onPressed: ()=>onPressed(model, context),
+          onPressed:onPressed!=null?
+          (){
+            model.changeOption(optionSelected);
+            showToast(toastMessage, context);
+            onPressed();
+          }
+              : ()=>onOptionButtonPressed(model, context),
           child: icon,
         );
       },
@@ -31,13 +38,16 @@ class OptionButton extends StatelessWidget {
   }
 }
 class HandButton extends OptionButton{
-  HandButton(Option optionSelected,String message,icon,):super(optionSelected: optionSelected,toastMessage: message,icon: icon);
+  final MyModel model;
+  HandButton(Option optionSelected,String message,icon,this.model):super(optionSelected: optionSelected,toastMessage: message,icon: icon);
   @override
-  onPressed(MyModel model, BuildContext context) {
+  onOptionButtonPressed(MyModel model, BuildContext context) {
     if(optionSelected==Option.rubber){
       model.changeColor(model.previousColor ?? Colors.yellow);
     }
     showToast('hand', context);
-    model.changeOption(Option.hand);}
+    model.changeOption(Option.hand);
+    model.changeMessage('Shade');
+  }
 
   }
