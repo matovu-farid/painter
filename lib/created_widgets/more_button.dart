@@ -13,16 +13,16 @@ class MoreButton extends StatelessWidget{
     return TriangleButton(model: model,);
   }
 
-  Widget buildOvalButton() {
-    return OvalButton();
+  Widget buildOvalButton(MyModel model) {
+    return OvalButton(model:model);
   }
 
-  Widget buildCircleButton() {
-    return CircleButton();
+  Widget buildCircleButton(MyModel model) {
+    return CircleButton(model:model);
   }
 
-  Widget buildSquareButton() {
-    return SquareButton();
+  Widget buildSquareButton(MyModel model) {
+    return SquareButton(model:model);
   }
 
   Widget buildRubberButton(MyModel model) {
@@ -34,7 +34,6 @@ class MoreButton extends StatelessWidget{
   }
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return FloatingActionButton(
       key: Key('More'),
       onPressed: () {
@@ -49,9 +48,9 @@ class MoreButton extends StatelessWidget{
                     spacing: 2,
                     children: [
                       buildRubberButton(model),
-                      buildSquareButton(),
-                      buildCircleButton(),
-                      buildOvalButton(),
+                      buildSquareButton(model),
+                      buildCircleButton(model),
+                      buildOvalButton(model),
                       buildTriangleButton(model),
                       buildPathButton(model),
                     ],
@@ -112,13 +111,17 @@ class RubberButton extends StatelessWidget {
 }
 
 class SquareButton extends StatelessWidget {
+  final MyModel model;
   const SquareButton({
-    Key key,
+    Key key,this.model
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return OptionButton(
+      onPressed: (){
+        model.changeMessage('Drag to Draw');
+      },
       optionSelected: Option.square,
       toastMessage: 'square',
       icon: ImageIcon(
@@ -129,13 +132,18 @@ class SquareButton extends StatelessWidget {
 }
 
 class CircleButton extends StatelessWidget {
+  final MyModel model;
   const CircleButton({
+    this.model,
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return OptionButton(
+        onPressed: (){
+          model.changeMessage('Drag to Draw');
+        },
         optionSelected: Option.circle,
         toastMessage: 'Circle',
         icon: Icon(FontAwesome.circle));
@@ -143,13 +151,18 @@ class CircleButton extends StatelessWidget {
 }
 
 class OvalButton extends StatelessWidget {
+  final MyModel model;
   const OvalButton({
+    this.model,
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return OptionButton(
+        onPressed: (){
+          model.changeMessage('Drag to Draw');
+        },
         optionSelected: Option.oval,
         toastMessage: 'Oval',
         icon: ImageIcon(
