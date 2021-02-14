@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "997099737057",
+    "project_id": "painter-1374a",
+    "storage_bucket": "painter-1374a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:997099737057:android:09717dc83389ca49cc4ca0",
+        "android_client_info": {
+          "package_name": "com.faridmatovu.painter_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "997099737057-kmq84p9vi548q5n7e1lohqg2m2h994nu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDGvDFH7CspX_A0WRkIf3Ow3h7nlD054c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "997099737057-kmq84p9vi548q5n7e1lohqg2m2h994nu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

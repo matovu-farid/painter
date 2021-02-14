@@ -1,4 +1,4 @@
-package com.example.drawing_app
+package com.faridmatovu.painter_app
 
 import io.flutter.embedding.android.FlutterActivity
 
