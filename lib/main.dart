@@ -114,15 +114,46 @@ class _MyHomePageState extends State<MyHomePage> with MainMethods{
       padding: const EdgeInsets.only(left: 12, right: 8),
       child: ScopedModelDescendant<MyModel>(
           builder: (BuildContext context, child, model) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            buildLineButton(model),
-            buildHandButton(model),
-            buildColorButton(),
-            buildSaveButton(model),
-            buildMoreButton(),
-          ],
+        return LayoutBuilder(
+
+          builder: (context, constraints) {
+            if(constraints.maxWidth<1000)
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                buildLineButton(model),
+                buildHandButton(model),
+                buildColorButton(),
+                buildSaveButton(model),
+                buildMoreButton(),],
+            );
+            else return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: buildLineButton(model),
+                ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: buildHandButton(model),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: buildColorButton(),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: buildSaveButton(model),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: buildMoreButton(),
+            ),
+
+            ],);
+
+          }
         );
       }),
     );
