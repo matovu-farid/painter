@@ -1,11 +1,12 @@
 import 'dart:async';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'created_classes/drawing_point_class.dart';
 import 'created_classes/options.dart';
 
-class MyModel extends Model{
+class MyModel extends Model with EquatableMixin{
   var message = '';
 
    Map<String,List<DrawingPoint>> optionMap={
@@ -79,6 +80,10 @@ class MyModel extends Model{
   Option previousOption;
   final optionList = [Option.hand,Option.line,];
 
+  @override
+  // TODO: implement props
+  List<Object> get props => [strokeWidth,selectedColor,previousColor,iconColor,optionSelected,guides,previousOption,optionList,optionMap];
+
   changeGuides(bool guidesGot){
     guides = guidesGot;
     notifyListeners();
@@ -117,6 +122,7 @@ class MyModel extends Model{
     selectedColor = color;
     notifyListeners();
   }
+
 }
 class  AnalyzedPoint{
   final String listName;

@@ -8,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
+
+
 class DrawingPainter extends CustomPainter with DrawingPainterMethods{
   final MyModel model;
   DrawingPainter( {this.model,});
@@ -31,6 +33,7 @@ class DrawingPainter extends CustomPainter with DrawingPainterMethods{
 
 
          endPoint = currentPoint;
+
 
          if(currentPoint.type == PointType.Start) {
            startPoint = currentPoint;
@@ -141,5 +144,7 @@ class DrawingPainter extends CustomPainter with DrawingPainterMethods{
     }
   }
   @override
-  bool shouldRepaint(DrawingPainter oldDelegate) =>true;
+  bool shouldRepaint(DrawingPainter oldDelegate) =>oldDelegate!=this;
+
+
 }

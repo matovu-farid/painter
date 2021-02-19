@@ -12,7 +12,7 @@ import 'created_widgets/save_button.dart';
 import 'dot_slider.dart';
 import 'home_page/my_drawer.dart';
 import 'model.dart';
-class MainMethods{
+mixin MainMethods{
 
   Widget buildMoreButton() {
     return MoreButton();
@@ -66,6 +66,7 @@ class MainMethods{
 
   Color color(MyModel model, Option option) =>
       model.optionSelected == option ? Colors.green : Colors.white;
+
 
   Widget buildMyDrawer() {
     return ShapeDrawer(

@@ -1,11 +1,10 @@
 import 'dart:math';
 import 'dart:ui';
-
 import 'package:drawing_app/created_classes/options.dart';
 import 'package:flutter/material.dart';
-
 import '../model.dart';
-class DrawingPainterMethods{
+
+mixin DrawingPainterMethods{
   drawFigure(Canvas canvas,Paint paint,Offset point1,Offset point2,{Option option = Option.circle,Offset controlPoint,MyModel model}){
     double x = point2.dx - point1.dx;
     double y = point2.dy - point1.dy;

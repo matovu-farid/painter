@@ -66,7 +66,6 @@ class _ShapeDrawerState extends State<ShapeDrawer> with ShapeDrawerMixin {
                 alignment: Alignment.topCenter,
                 child: Text(
                   model.message,
-
                   style: GoogleFonts.damion(
                     textStyle: TextStyle(
                         fontStyle: FontStyle.italic,
