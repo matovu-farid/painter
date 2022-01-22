@@ -24,3 +24,11 @@ Matovu Farid Nkoba
 - [linkedin](https://www.linkedin.com/in/matovu-farid-48b80257)
 - [twitter](https://twitter.com/matovu100)
 
+## Show your support
+
+Give a ⭐️ if you like this project!
+
+## 📝 License
+
+This project is [MIT](./MIT.md) licensed.
+
