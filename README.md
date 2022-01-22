@@ -1,14 +1,18 @@
 # Painter
 
 ## Description
-This app is for painting with your plain hand.
-The app allows drawing all kinds of shapes iin various colors.
+This app is for painting with your plain hand.The app allows drawing all kinds of shapes iin various colors as well as saving your art by taking screenshots of the canvas
 
 ![screenshot](./assets/image.png)
 
 ## Built with
 - Dart
 - Flutter
+
+## Getting Started
+To get the content of this project locally you need to run this command in your terminal:
+- git clone your https://github.com/matovu-farid/painter.git
+- cd project painter
 
 ## View on play store
 The app is deployed on playstore
