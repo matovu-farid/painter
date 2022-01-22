@@ -1,7 +1,8 @@
 # Painter
+An app for panting.
 
 ## Description
-This app is for painting with your plain hand.The app allows drawing all kinds of shapes iin various colors as well as saving your art by taking screenshots of the canvas
+This app is for painting with your plain hands and also allows drawing all kinds of shapes like circles, squares and ovals in various colours as well as saving your art by taking screenshots of the canvas. The app is built with Flutter and dart.
 
 ![screenshot](./assets/image.png)
 
